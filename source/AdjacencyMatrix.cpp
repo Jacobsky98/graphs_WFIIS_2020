@@ -1,8 +1,20 @@
 #include "headers/AdjacencyMatrix.hpp"
 #include <vector>
+#include <cmath>
 
-AdjacencyMatrix::AdjacencyMatrix(std::vector<std::vector<int>> const &initializer) : matrix(initializer)
+
+AdjacencyMatrix &AdjacencyMatrix::loadFromFile(const std::string fileName)
 {
+    AdjacencyMatrix *adjacencyMatrix = new AdjacencyMatrix();
+    std::fstream file(fileName);
+    std::vector<int> data;
+    int variable;
+    while(file >> variable)
+    {
+        data.push_back(variable);
+    }
+    adjacencyMatrix->vectorToMatrix(data, sqrt(data.size()));
+    return *adjacencyMatrix;
 }
 
 Graph &AdjacencyMatrix::addVertex()
@@ -61,10 +73,33 @@ Graph &AdjacencyMatrix::convertFromList(AdjacencyList const &adjacencyList)
 
 std::ostream &AdjacencyMatrix::print(std::ostream &o) const
 {
-    return convertToList().print(o);
+    for(int i = 0; i < (int)matrix.size(); i++)
+    {
+        for(int j = 0; j < (int)matrix[i].size(); j++)
+            o << matrix[i][j] << "\t";
+        o << "\n";
+    }
+    return o;
+}
+
+std::ostream &AdjacencyMatrix::printToFile(std::ostream &o) const
+{
+    return convertToList().printToFile(o);
 }
 
 std::vector<std::vector<int>> AdjacencyMatrix::getMatrix() const
 {
     return matrix;
+}
+
+void AdjacencyMatrix::vectorToMatrix(std::vector<int> vec, int rowsize)
+{
+    matrix = std::vector<std::vector<int>> (rowsize, std::vector<int>(rowsize));
+    for(int i = 0; i < rowsize; i++)
+    {
+        for(int j = 0; j < rowsize; j++)
+        {
+            matrix[i][j] = vec[j + i * rowsize];
+        }
+    }
 }

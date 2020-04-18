@@ -1,7 +1,29 @@
 #include "headers/IncidenceMatrix.hpp"
 
 IncidenceMatrix::IncidenceMatrix(std::vector<std::vector<int>> const &initializer) : matrix(initializer)
+{}
+
+IncidenceMatrix &IncidenceMatrix::loadFromFile(const std::string fileName)
 {
+    
+    IncidenceMatrix *incidenceMatrix = new IncidenceMatrix();
+    std::fstream file(fileName);
+    incidenceMatrix -> matrix.clear();
+    incidenceMatrix -> matrix.push_back(std::vector<int>());
+    std::string str;
+    int i = 0;
+    while(getline(file, str))
+    {
+        std::istringstream line(str);
+        int variable;
+        while(line >> variable)
+        {
+            incidenceMatrix -> matrix[i].push_back(variable);
+        }
+        i++;
+        incidenceMatrix -> matrix.push_back(std::vector<int>());
+    }
+    return *incidenceMatrix;
 }
 
 Graph &IncidenceMatrix::addVertex()
@@ -81,5 +103,16 @@ Graph &IncidenceMatrix::convertFromList(AdjacencyList const &adjacencyList)
 
 std::ostream &IncidenceMatrix::print(std::ostream &o) const
 {
-    return convertToList().print(o);
+    for(int i = 0; i < (int)matrix.size(); i++)
+    {
+        for(int j = 0; j < (int)matrix[i].size(); j++)
+            o << matrix[i][j] << "\t";
+        o << "\n";
+    }
+    return o;
+}
+
+std::ostream &IncidenceMatrix::printToFile(std::ostream &o) const
+{
+    return convertToList().printToFile(o);
 }

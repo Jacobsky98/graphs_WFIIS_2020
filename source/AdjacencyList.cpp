@@ -3,7 +3,28 @@
 #include <cmath>
 
 AdjacencyList::AdjacencyList(std::vector<std::list<int>> const &initializer) : list(initializer)
+{}
+
+AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
 {
+    AdjacencyList *adjacencyList = new AdjacencyList();
+    std::fstream file(fileName);
+    adjacencyList->list.clear();
+    adjacencyList->list.push_back(std::list<int>());
+    int i = 0;
+    std::string str;
+    while(getline(file, str))
+    {
+        std::istringstream line(str);
+        int variable;
+        while(line >> variable)
+        {
+            adjacencyList->list[i].push_back(variable);
+        }
+        i++;
+        adjacencyList->list.push_back(std::list<int>());
+    }
+    return *adjacencyList;
 }
 
 Graph &AdjacencyList::addVertex()
@@ -38,6 +59,20 @@ Graph &AdjacencyList::convertFromList(AdjacencyList const &adjacencyList)
 };
 
 std::ostream &AdjacencyList::print(std::ostream &o) const
+{
+    for(int i = 0; i < (int)list.size(); i++)
+    {
+        o << i << ".\t";
+        for(auto const& node: list[i])
+        {
+            o << node << "\t";
+        }
+        o << "\n";
+    }
+    return o;   
+}
+
+std::ostream &AdjacencyList::printToFile(std::ostream &o) const
 {
     const double radius = 10.;
     const int n = list.size();

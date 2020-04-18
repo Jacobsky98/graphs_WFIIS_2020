@@ -7,30 +7,39 @@
 
 int main()
 {
-    Graph *graph;
-    std::vector<std::vector<int>> matrix = {
-        {0, 1, 0, 0, 1},
-        {1, 0, 1, 1, 0},
-        {0, 1, 0, 0, 0},
-        {0, 1, 0, 0, 0},
-        {1, 0, 0, 0, 0}};
-
-    AdjacencyMatrix adjacencyMatrix(matrix);
-    graph = &adjacencyMatrix;
-    *graph = graph->convertToList();
-
-    IncidenceMatrix incidenceMatrix;
-
-    Graph::convert(*graph, incidenceMatrix);
-
-    graph = &incidenceMatrix;
-
     std::ofstream file("output.dat");
-    AdjacencyList adjacencyList = Graph::randomByEdges(6, 9);
-    adjacencyList = Graph::randomByProbability(6, 0.1);
+    Graph *graph;
+
+
+    AdjacencyMatrix adjacencyMatrix = AdjacencyMatrix::loadFromFile("adjMat.txt");
+    adjacencyMatrix.print(std::cout);
+    std::cout << "\n\n";
+
+    AdjacencyList adjacencyList = AdjacencyList::loadFromFile("adjList.txt");
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+
+    IncidenceMatrix incidenceMatrix = IncidenceMatrix::loadFromFile("incMat.txt");
+    incidenceMatrix.print(std::cout);
+    std::cout << "\n\n";
+
+    graph = &adjacencyMatrix;
+
+    AdjacencyList testAdjacencyList({{},{}});
+    IncidenceMatrix testIncidenceMatrix({{},{}});
+
+    Graph::convert(*graph, testIncidenceMatrix);
+    Graph::convert(*graph, testAdjacencyList);
+
+    testAdjacencyList.print(std::cout);
+    std::cout << "\n\n";
+    testIncidenceMatrix.print(std::cout);
+    std::cout << "\n\n";
+    
+    adjacencyList = Graph::randomByEdges(6, 9);
+    adjacencyList = Graph::randomByProbability(6, 0.3);
     graph = &adjacencyList;
-    file << graph;
-
-
+    graph -> printToFile(file);
+    std::cout << graph;
     return 0;
 }

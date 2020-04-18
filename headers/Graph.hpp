@@ -2,6 +2,9 @@
 #define GRAPH_HPP
 
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 class AdjacencyList;
 
@@ -41,12 +44,18 @@ public:
 */
     virtual Graph &convertFromList(AdjacencyList const &adjacencyList) = 0;
 
+/**
+     * Wypisyje graf do strumienia w surowej postaci listy/macierzy.
+     * @param o Strumien, do ktorego wpisywany jest ciag znakow.
+*/
+    virtual std::ostream &print(std::ostream &o) const = 0;
+
     /**
      * Wypisyje graf do strumienia dla programu gnuplot.
      * @param o Strumien, do ktorego wpisywany jest ciag znakow.
-     * @see AdjacencyList::print
+     * @see AdjacencyList::printToFile
 */
-    virtual std::ostream &print(std::ostream &o) const = 0;
+    virtual std::ostream &printToFile(std::ostream &o) const = 0;
 
     /**
      * Wypisyje graf do strumienia dla programu gnuplot.
