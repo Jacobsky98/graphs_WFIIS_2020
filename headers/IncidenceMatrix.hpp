@@ -28,6 +28,10 @@ public:
 
 private:
     std::vector<std::vector<int>> matrix;
+
+    /**
+     * Ilosc wierzcholkow
+    */
     int _n = 0;
 };
 

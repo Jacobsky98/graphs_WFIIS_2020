@@ -1,7 +1,12 @@
 #include "headers/IncidenceMatrix.hpp"
 
 IncidenceMatrix::IncidenceMatrix(std::vector<std::vector<int>> const &initializer) : matrix(initializer)
-{}
+{
+    if(initializer.size() > 0)
+        _n = initializer[0].size();
+    else
+        _n = 0;
+}
 
 IncidenceMatrix &IncidenceMatrix::loadFromFile(const std::string fileName)
 {
@@ -9,20 +14,20 @@ IncidenceMatrix &IncidenceMatrix::loadFromFile(const std::string fileName)
     IncidenceMatrix *incidenceMatrix = new IncidenceMatrix();
     std::fstream file(fileName);
     incidenceMatrix -> matrix.clear();
-    incidenceMatrix -> matrix.push_back(std::vector<int>());
     std::string str;
     int i = 0;
     while(getline(file, str))
     {
+        incidenceMatrix -> matrix.push_back(std::vector<int>());
         std::istringstream line(str);
         int variable;
         while(line >> variable)
         {
             incidenceMatrix -> matrix[i].push_back(variable);
         }
-        i++;
-        incidenceMatrix -> matrix.push_back(std::vector<int>());
+        i++;     
     }
+    incidenceMatrix -> _n = incidenceMatrix -> matrix[0].size();
     return *incidenceMatrix;
 }
 
@@ -51,16 +56,17 @@ AdjacencyList IncidenceMatrix::convertToList() const
 {
     const int numberOfEdges = matrix.size();
     std::vector<std::list<int>> list(_n);
-
     int first, second;
     for (int i = 0; i < numberOfEdges; ++i)
     {
         first = -1;
         second = -1;
         for (int j = 0; j < _n; ++j)
+        {
             if (matrix[i][j] > 0 && first < 0)
                 first = j;
-            else if (matrix[i][j] > 0 && second < 0) {
+            else if (matrix[i][j] > 0 && second < 0) 
+            {
                 second = j;
         
                 //zaklada ze graf jest prosty
@@ -68,8 +74,9 @@ AdjacencyList IncidenceMatrix::convertToList() const
                 list[second].push_back(first);
                 break;
             }
+        }
     }
-
+    
     return AdjacencyList(list);
 };
 
