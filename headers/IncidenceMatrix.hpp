@@ -12,7 +12,7 @@ public:
     IncidenceMatrix() = default;
 
     IncidenceMatrix(std::vector<std::vector<int>> const &initializer);
-    static IncidenceMatrix &loadFromFile(const std::string fileName);
+    IncidenceMatrix &loadFromFile(const std::string fileName);
 
     virtual Graph &addVertex() override;
 

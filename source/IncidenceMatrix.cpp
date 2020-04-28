@@ -9,26 +9,47 @@ IncidenceMatrix::IncidenceMatrix(std::vector<std::vector<int>> const &initialize
 }
 
 IncidenceMatrix &IncidenceMatrix::loadFromFile(const std::string fileName)
-{
-    
-    IncidenceMatrix *incidenceMatrix = new IncidenceMatrix();
+{ 
     std::fstream file(fileName);
-    incidenceMatrix -> matrix.clear();
+    matrix.clear();
+	std::vector<std::vector<int>> fileMatrix;
     std::string str;
     int i = 0;
     while(getline(file, str))
     {
-        incidenceMatrix -> matrix.push_back(std::vector<int>());
+        fileMatrix.push_back(std::vector<int>());
         std::istringstream line(str);
         int variable;
         while(line >> variable)
         {
-            incidenceMatrix -> matrix[i].push_back(variable);
+            fileMatrix[i].push_back(variable);
         }
         i++;     
     }
-    incidenceMatrix -> _n = incidenceMatrix -> matrix[0].size();
-    return *incidenceMatrix;
+	
+	if(!fileMatrix.size()) return *this;
+	
+	for(unsigned int row = 0; row < fileMatrix.size(); row++) {
+		addVertex();
+	}
+	
+	unsigned int first, second;
+    for(unsigned int column = 0; column < fileMatrix[0].size(); column++) {
+		first = -1;
+        second = -1;
+		for(unsigned int row = 0; row < fileMatrix.size(); row++) {
+			addVertex();
+			if (fileMatrix[row][column] > 0 && first < 0)
+                first = row;
+            else if (fileMatrix[row][column] > 0 && second < 0) 
+            {
+                second = row;
+				addEdge(first, second);
+			}
+		}
+	}
+	
+    return *this;
 }
 
 Graph &IncidenceMatrix::addVertex()
@@ -76,7 +97,6 @@ AdjacencyList IncidenceMatrix::convertToList() const
             }
         }
     }
-    
     return AdjacencyList(list);
 };
 
