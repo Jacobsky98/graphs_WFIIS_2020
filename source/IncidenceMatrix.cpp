@@ -66,11 +66,14 @@ Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 
 Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
 {
-    for(auto column = matrix.begin(); column != matrix.end(); )
+    for(int column = 0; column < matrix[0].size(); column++)
     {
-        if((*column)[firstVertex] == 1 && (*column)[secondVertex] == 1)
-            matrix.erase(column);
-        column++;
+        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
+        {
+            for(int row = 0; row < _n; row++)
+                matrix[row].erase(matrix[row].begin()+column);
+            break;
+        }
     }
     return *this;
 }
