@@ -27,15 +27,16 @@ IncidenceMatrix &IncidenceMatrix::loadFromFile(const std::string fileName)
         }
         i++;     
     }
-    incidenceMatrix -> _n = incidenceMatrix -> matrix[0].size();
+    incidenceMatrix -> _n = incidenceMatrix -> matrix.size();
     return *incidenceMatrix;
 }
 
 Graph &IncidenceMatrix::addVertex()
 {
     _n++;
-    for (unsigned int i = 0; i < matrix.size(); ++i)
-        matrix[i].push_back(0);
+    std::vector<int> newRow;
+    newRow.resize(matrix[0].size());
+    matrix.push_back(newRow);
 
     return *this;
 }
@@ -54,24 +55,28 @@ Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 
 AdjacencyList IncidenceMatrix::convertToList() const
 {
-    const int numberOfEdges = matrix.size();
+    const int numberOfEdges = matrix[0].size();
     std::vector<std::list<int>> list(_n);
     int first, second;
-    for (int i = 0; i < numberOfEdges; ++i)
+    for (int column = 0; column < numberOfEdges; ++column)
     {
         first = -1;
         second = -1;
-        for (int j = 0; j < _n; ++j)
+        for (int row = 0; row < _n; ++row)
         {
-            if (matrix[i][j] > 0 && first < 0)
-                first = j;
-            else if (matrix[i][j] > 0 && second < 0) 
+            if (matrix[row][column] > 0 && first < 0)
+                first = row;
+            else if (matrix[row][column] > 0 && second < 0) 
             {
-                second = j;
+                second = row;
         
                 //zaklada ze graf jest prosty
                 list[first].push_back(second);
                 list[second].push_back(first);
+                list[first].sort();
+                list[second].sort();
+                list[first].unique();
+                list[second].unique();
                 break;
             }
         }
