@@ -10,11 +10,11 @@ AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
     AdjacencyList *adjacencyList = new AdjacencyList();
     std::fstream file(fileName);
     adjacencyList->list.clear();
-    adjacencyList->list.push_back(std::list<int>());
     int i = 0;
     std::string str;
     while(getline(file, str))
     {
+        adjacencyList->list.push_back(std::list<int>());
         std::istringstream line(str);
         int variable;
         while(line >> variable)
@@ -22,7 +22,6 @@ AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
             adjacencyList->list[i].push_back(variable);
         }
         i++;
-        adjacencyList->list.push_back(std::list<int>());
     }
     return *adjacencyList;
 }
@@ -43,7 +42,18 @@ Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex)
 {
     list[firstVertex].push_back(secondVertex);
     list[secondVertex].push_back(firstVertex);
+    list[firstVertex].sort();
+    list[secondVertex].sort();
+    list[firstVertex].unique();
+    list[secondVertex].unique();
 
+    return *this;
+}
+
+Graph &AdjacencyList::removeEdge(int firstVertex, int secondVertex)
+{
+    list[firstVertex].remove(secondVertex);
+    list[secondVertex].remove(firstVertex);
     return *this;
 }
 

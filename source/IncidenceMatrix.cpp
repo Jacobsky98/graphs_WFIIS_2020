@@ -43,14 +43,35 @@ Graph &IncidenceMatrix::addVertex()
 
 Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 {
-    for (unsigned int row = 0; row < _n; ++row)
+    bool edgeAlreadyExists = false;
+    for(int i = 0; i < _n; i++)
     {
-        if(row == firstVertex || row == secondVertex)
-            matrix[row].push_back(1);
-        else
-            matrix[row].push_back(0);
+        if(matrix[firstVertex][i] == 1 && matrix[secondVertex][i] == 1)
+        {
+            edgeAlreadyExists = true;
+        }   
     }
+    if(!edgeAlreadyExists)
+    {    
+        for (unsigned int i = 0; i < matrix.size(); ++i)
+        {
+            if(i == firstVertex || i == secondVertex)
+                matrix[i].push_back(1);
+            else
+                matrix[i].push_back(0);
+        }
+    }
+    return *this;
+}
 
+Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
+{
+    for(auto column = matrix.begin(); column != matrix.end(); )
+    {
+        if((*column)[firstVertex] == 1 && (*column)[secondVertex] == 1)
+            matrix.erase(column);
+        column++;
+    }
     return *this;
 }
 

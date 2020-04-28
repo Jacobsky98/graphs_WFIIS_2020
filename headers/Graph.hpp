@@ -34,6 +34,10 @@ public:
 */
     virtual Graph &addEdge(int firstVertex, int secondVertex) = 0;
 
+    /*
+    *   Usuwa krawędź pomiędzy podanymi wierzchołkami
+    */
+    virtual Graph &removeEdge(int firstVertex, int secondVertex) = 0;
     /**
      * Konwertuje graf do listy sasiedztwa.
      * @return Lista sasiedztwa.
