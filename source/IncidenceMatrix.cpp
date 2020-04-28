@@ -44,21 +44,21 @@ Graph &IncidenceMatrix::addVertex()
 Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 {
     bool edgeAlreadyExists = false;
-    for(int i = 0; i < _n; i++)
+    for(int column = 0; column < matrix[0].size(); column++)
     {
-        if(matrix[firstVertex][i] == 1 && matrix[secondVertex][i] == 1)
+        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
         {
             edgeAlreadyExists = true;
         }   
     }
     if(!edgeAlreadyExists)
     {    
-        for (unsigned int i = 0; i < matrix.size(); ++i)
+        for (unsigned int row = 0; row < _n; ++row)
         {
-            if(i == firstVertex || i == secondVertex)
-                matrix[i].push_back(1);
+            if(row == firstVertex || row == secondVertex)
+                matrix[row].push_back(1);
             else
-                matrix[i].push_back(0);
+                matrix[row].push_back(0);
         }
     }
     return *this;
@@ -120,7 +120,6 @@ Graph &IncidenceMatrix::convertFromList(AdjacencyList const &adjacencyList)
     {
         for (int second : list[first])
         {
-            std::cout<< first << " " << second <<std::endl;
             addEdge(first, second);
         }
     }
