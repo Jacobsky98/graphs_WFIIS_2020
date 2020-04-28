@@ -5,8 +5,10 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 
 class AdjacencyList;
+class AdjacencyMatrix;
 
 class Graph
 {
@@ -85,6 +87,26 @@ public:
      * @return Wygenerowany graf losowy.
 */
     static AdjacencyList randomByProbability(unsigned int n, double p);
+
+    /**
+     * Sprawdza czy sekwencja liczb naturalnych jest ciagiem graficznym
+     * @param A sekwencja liczb naturalnych
+*/
+    static bool degreeSequence(std::vector<int> A);
+
+    /**
+     * Sprawdza czy sekwencja liczb naturalnych jest ciagiem graficznym i jezeli tak tworzy graf prosty
+     * @param A sekwencja liczb naturalnych
+*/
+    static AdjacencyList constuctGraphFromDegreeSequence(std::vector<int>& A);
+
+    /**
+     * Znajduje najwieksza wspolna skladowa grafu
+     * @param adjacencyMatrix graf
+*/
+    static void largestComponent(AdjacencyMatrix adjacencyMatrix);
+// private:
+//     static void breadthFirstSearch(int x, int y, int i, int j, std::vector<std::vector<int>> matrix, int* visited[], int* current_count);
 };
 
 #endif

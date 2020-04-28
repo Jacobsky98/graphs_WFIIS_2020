@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h> 
+#include <algorithm>
 
 std::ostream &operator<<(std::ostream &o, Graph const *graph)
 {
@@ -75,4 +76,102 @@ AdjacencyList Graph::randomByProbability(unsigned int n, double p)
     }
 
     return graph;
+}
+
+bool Graph::degreeSequence(std::vector<int> A)
+{
+    while(1) 
+    {
+        sort(A.begin(), A.end(), std::greater<>()); 
+        if(A[0] == 0)
+            return true;
+        unsigned int value = A[0];
+        A.erase(A.begin()+0);
+
+        if(value > A.size())
+            return false;
+        for(unsigned int i = 0; i < value; i++)
+        {
+            A[i]--;
+            if(A[i] < 0)
+            {
+                return false;
+            }
+        }
+    }
+    
+}
+
+AdjacencyList Graph::constuctGraphFromDegreeSequence(std::vector<int>& A)
+{
+    if(Graph::degreeSequence(A))
+    {
+        std::cout << "Ciag jest graficzny\n";
+        unsigned int rowsize = A.size();
+        std::vector<std::vector<int>> matrix = std::vector<std::vector<int>> (rowsize, std::vector<int>(rowsize));
+        
+        for (unsigned int i = 0; i < rowsize; i++) { 
+            for (unsigned int j = i + 1; j < rowsize; j++) { 
+                if (A[i] > 0 && A[j] > 0) { 
+                    A[i]--; 
+                    A[j]--; 
+                    matrix[i][j] = 1; 
+                    matrix[j][i] = 1; 
+                } 
+            } 
+        }
+
+        AdjacencyMatrix adjacencyMatrix(matrix);
+    
+        return AdjacencyList(adjacencyMatrix.convertToList());
+    }
+
+    std::cout << "Ciag nie jest graficzny\n";
+    return AdjacencyList();
+}
+
+void Graph::largestComponent(AdjacencyMatrix adjacencyMatrix)
+{
+    int current_max = INT32_MIN;
+    int current_count[1] = {0};
+
+    std::vector<std::vector<int>> matrix = adjacencyMatrix.getMatrix();
+    int n = matrix.size();
+    int m = matrix[0].size();
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < m; j++)
+        {
+            int visited[n][m] = {0};
+            *current_count = 0;
+
+            if(j+1 < m)
+            {
+                //Graph::breadthFirstSearch([i][j], matrix[i][j+1], i, j, matrix, visited, current_count);
+            
+                
+            }
+        }
+    }
+
+}
+
+void breadthFirstSearch(int x, int y, int i, int j, std::vector<std::vector<int>> matrix, int** visited, int* current_count)
+{
+    if (x != y) 
+        return; 
+  
+    visited[i][j] = 1; 
+    *current_count++; 
+  
+    // x_move and y_move arrays 
+    // are the possible movements 
+    // in x or y direction 
+    int x_move[] = { 0, 0, 1, -1 }; 
+    int y_move[] = { 1, -1, 0, 0 }; 
+  
+    // checks all four points connected with input[i][j] 
+    // for (int u = 0; u < 4; u++) 
+    //     if (is_valid(i + y_move[u], j + x_move[u], x, input)) 
+    //         BFS(x, y, i + y_move[u], j + x_move[u], input); 
 }

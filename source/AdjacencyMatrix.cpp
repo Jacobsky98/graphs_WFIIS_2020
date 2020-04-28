@@ -3,6 +3,11 @@
 #include <cmath>
 
 
+AdjacencyMatrix::AdjacencyMatrix(std::vector<std::vector<int>> matrix)
+{
+    this->matrix = matrix;
+}
+
 AdjacencyMatrix &AdjacencyMatrix::loadFromFile(const std::string fileName)
 {
     AdjacencyMatrix *adjacencyMatrix = new AdjacencyMatrix();

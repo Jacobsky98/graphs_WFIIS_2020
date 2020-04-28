@@ -24,6 +24,9 @@ public:
 */
     template<class... Args>
     AdjacencyMatrix(Args... args);
+
+    AdjacencyMatrix(std::vector<std::vector<int>> matrix);
+
     static AdjacencyMatrix &loadFromFile(const std::string fileName);
     
     virtual Graph &addVertex() override;

@@ -35,3 +35,6 @@ all: $(OBJECTS)
 clean:
 	rm -rf obj/*
 	rm -f $(TARGET)
+
+run:
+	./$(TARGET)
