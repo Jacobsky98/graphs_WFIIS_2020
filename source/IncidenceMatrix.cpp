@@ -43,12 +43,13 @@ Graph &IncidenceMatrix::addVertex()
 
 Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 {
-    std::vector<int> newColumn(_n);
-
-    newColumn[firstVertex] = 1;
-    newColumn[secondVertex] = 1;
-
-    matrix.push_back(newColumn);
+    for (unsigned int i = 0; i < matrix.size(); ++i)
+    {
+        if(i == firstVertex || i == secondVertex)
+            matrix[i].push_back(1);
+        else
+            matrix[i].push_back(0);
+    }
 
     return *this;
 }
