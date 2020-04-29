@@ -34,6 +34,10 @@ public:
 */
     virtual Graph &addEdge(int firstVertex, int secondVertex) = 0;
 
+    /*
+    *   Usuwa krawędź pomiędzy podanymi wierzchołkami
+    */
+    virtual Graph &removeEdge(int firstVertex, int secondVertex) = 0;
     /**
      * Konwertuje graf do listy sasiedztwa.
      * @return Lista sasiedztwa.
@@ -105,6 +109,13 @@ public:
      * @param adjacencyMatrix graf
 */
     static void largestComponent(AdjacencyMatrix adjacencyMatrix);
+
+    /*
+    *   Randomizuje zadaną ilość losowych krawędzi.
+    *   @param howMany ilość żądanych randomizacji
+    *   @param graph Gra, który ma zostać poddany randomizacji
+    */
+    static AdjacencyList randomizeEdges(unsigned int howMany,const Graph& graph);
 // private:
 //     static void breadthFirstSearch(int x, int y, int i, int j, std::vector<std::vector<int>> matrix, int* visited[], int* current_count);
 };

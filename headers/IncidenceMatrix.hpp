@@ -18,6 +18,8 @@ public:
 
     virtual Graph &addEdge(int firstVertex, int secondVertex) override;
 
+    virtual Graph &removeEdge(int firstVertex, int secondVertex) override;
+    
     virtual AdjacencyList convertToList() const override;
 
     virtual Graph &convertFromList(AdjacencyList const &adjacencyList) override;

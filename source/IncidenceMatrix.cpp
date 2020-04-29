@@ -43,14 +43,38 @@ Graph &IncidenceMatrix::addVertex()
 
 Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 {
-    for (unsigned int row = 0; row < _n; ++row)
+    bool edgeAlreadyExists = false;
+    for(int column = 0; column < matrix[0].size(); column++)
     {
-        if(row == firstVertex || row == secondVertex)
-            matrix[row].push_back(1);
-        else
-            matrix[row].push_back(0);
+        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
+        {
+            edgeAlreadyExists = true;
+        }   
     }
+    if(!edgeAlreadyExists)
+    {    
+        for (unsigned int row = 0; row < _n; ++row)
+        {
+            if(row == firstVertex || row == secondVertex)
+                matrix[row].push_back(1);
+            else
+                matrix[row].push_back(0);
+        }
+    }
+    return *this;
+}
 
+Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
+{
+    for(int column = 0; column < matrix[0].size(); column++)
+    {
+        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
+        {
+            for(int row = 0; row < _n; row++)
+                matrix[row].erase(matrix[row].begin()+column);
+            break;
+        }
+    }
     return *this;
 }
 
@@ -96,7 +120,6 @@ Graph &IncidenceMatrix::convertFromList(AdjacencyList const &adjacencyList)
     {
         for (int second : list[first])
         {
-            std::cout<< first << " " << second <<std::endl;
             addEdge(first, second);
         }
     }

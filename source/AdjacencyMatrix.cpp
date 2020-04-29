@@ -45,6 +45,14 @@ Graph &AdjacencyMatrix::addEdge(int firstVertex, int secondVertex)
     return *this;
 }
 
+Graph &AdjacencyMatrix::removeEdge(int firstVertex, int secondVertex)
+{
+    matrix[firstVertex][secondVertex] = 0;
+    matrix[secondVertex][firstVertex] = 0;
+
+    return *this;
+}
+
 AdjacencyList AdjacencyMatrix::convertToList() const
 {
     const int n = matrix.size();

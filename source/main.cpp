@@ -72,6 +72,18 @@ void project_2() {
 
 int main()
 {
-    project_2();
+    //project_2();
+    IncidenceMatrix test = IncidenceMatrix::loadFromFile("input/p1/incMat.txt");
+    Graph* grp = &test;
+    std::cout << grp << std::endl;
+    std::cout << grp << std::endl;
+
+    grp->addEdge(1,2);
+    
+    std::cout << grp << std::endl;
+    //grp->removeEdge(0,2);
+    
+    //std::cout << grp << std::endl;
+
     return 0;
 }

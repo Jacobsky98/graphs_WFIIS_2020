@@ -175,3 +175,56 @@ void breadthFirstSearch(int x, int y, int i, int j, std::vector<std::vector<int>
     //     if (is_valid(i + y_move[u], j + x_move[u], x, input)) 
     //         BFS(x, y, i + y_move[u], j + x_move[u], input); 
 }
+
+
+AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
+{
+    srand(time(NULL));
+    AdjacencyList adj = graph.convertToList();
+
+    int firstEdge[2] = {-1, -1};
+    int secondEdge[2] = {-1, -1};
+
+    bool reRoll = true;
+    for(int i = 0; i < howMany; i++)
+    {
+        auto list = adj.getList();
+        while(reRoll)
+        {
+            reRoll = false;
+            firstEdge[0] = rand() % list.size();
+            if(list[firstEdge[0]].size() == 0)
+            {
+                reRoll = true;
+                continue;
+            }
+            int index = rand() % list[firstEdge[0]].size();
+            auto it = std::next(list[firstEdge[0]].begin(), index);
+            firstEdge[1] = *it;
+        }
+        do
+        {
+            reRoll = false;
+            secondEdge[0] = rand() % list.size();
+            if(secondEdge[0] == firstEdge[0] || secondEdge[0] == firstEdge[1])
+            {
+                reRoll = true;
+                continue;
+            }
+            int index = rand() % list[secondEdge[0]].size();
+            auto it = std::next(list[secondEdge[0]].begin(), index);
+            secondEdge[1] = *it;
+            if(secondEdge[1] == firstEdge[0] || secondEdge[1] == firstEdge[1])
+            {
+                reRoll = true;
+                continue;
+            }
+        }while(reRoll);
+
+        adj.removeEdge(firstEdge[0], firstEdge[1]);
+        adj.removeEdge(secondEdge[0], secondEdge[1]);
+        adj.addEdge(firstEdge[0], secondEdge[1]);
+        adj.addEdge(firstEdge[1], secondEdge[0]);
+    }
+    return adj;
+}
