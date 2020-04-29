@@ -324,8 +324,62 @@ void Graph::components_r(int nr, int i, std::vector<std::list<int>> list, int* c
     }
 }
 
+bool Graph::hamiltonCycleFind(AdjacencyMatrix& adjacencyMatrix)
+{
+    int n = adjacencyMatrix.getMatrix().size();
+    int path[n];
+    for(int i = 0; i < n; i++)
+        path[i] = -1;
+    path[0] = 0;
+    if(hamiltonCycle(adjacencyMatrix, path, 1) == false)
+    {
+        std::cout << "Cykl Hamiltona dla podanego grafu nie istnieje\n";
+        return false;
+    }
+    std::cout << "Cykl Hamiltona dla podanego grafu:\n";
+    for(int i = 0; i < n; i++)
+        std::cout << path[i] << " ";
+    std::cout << path[0] << "\n";
+    return true;
+}
 
+bool Graph::hamiltonCycle(AdjacencyMatrix& adjacencyMatrix, int path[], int pos)
+{
+    int n = adjacencyMatrix.getMatrix().size();
+    auto matrix = adjacencyMatrix.getMatrix();
+    if(pos == n)
+    {
+        if(matrix[path[pos-1]][path[0]] == 1)
+            return true;
+        else
+            return false;
+    }
 
+    for(int v = 1; v < n; v++)
+    {
+        bool vertex_can_be_add = true;
+        if(matrix[path[pos-1]][v] == 0)
+            vertex_can_be_add = false;
+        for(int k = 0; k < pos; k++)
+        {
+            if(path[k] == v)
+            {
+                vertex_can_be_add = false;
+                break;
+            }
+        }
+        if(vertex_can_be_add)
+        {
+            path[pos] = v;
+            if(hamiltonCycle(adjacencyMatrix, path, pos+1))
+                return true;
+
+            path[pos] = -1;
+        }
+    }
+
+    return false;
+}
 
 AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
 {

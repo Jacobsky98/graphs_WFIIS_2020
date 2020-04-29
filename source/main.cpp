@@ -81,13 +81,32 @@ void project_2() {
 
     // Graph::randomEuler(10);
 
+    // zadanie 5
+    // std::ofstream file("output.dat");
+    // Graph *graph;
+    // AdjacencyList g1=    Graph::generateKRegularGraph(7, 2);
+    // graph = &g1;
+    // graph -> printToFile(file);
+
+    // zadanie 6
+    // przykladowy wejsciowy graf z rysunku 4
+    AdjacencyMatrix z6(
+        0,1,0,1,1,0,0,0,
+        1,0,1,0,1,1,0,0,
+        0,1,0,1,0,0,1,0,
+        1,0,1,0,0,1,1,0,
+        1,1,0,0,0,0,0,1,
+        0,1,0,1,0,0,0,1,
+        0,0,1,1,0,0,0,1,
+        0,0,0,0,1,1,1,0
+                        );
+    Graph::hamiltonCycleFind(z6);
     
 }
 
 int main()
 {
-    // project_2();
-        Graph::generateKRegularGraph(7, 2);
+    project_2();
 
     // IncidenceMatrix test = IncidenceMatrix::loadFromFile("input/p1/incMat.txt");
     // Graph* grp = &test;

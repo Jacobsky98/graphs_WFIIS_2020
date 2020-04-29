@@ -138,6 +138,13 @@ public:
      * @param k stopien wierzcholkow
 */
     static AdjacencyList generateKRegularGraph(unsigned int n, unsigned int k);
+
+    /**
+     * Wyszukuje cykl Hamiltona w grafie, procedura startowa
+     * @param adjacencyMatrix graf w postaci macierzy sasiedztwa
+*/
+    static bool hamiltonCycleFind(AdjacencyMatrix& adjacencyMatrix);
+
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych
@@ -147,6 +154,15 @@ private:
      * @param comp tablica skladowych sciezki
 */
     static void components_r(int nr, int i, std::vector<std::list<int>> list, int* comp);
+
+
+    /**
+     * Wyszukuje cykl Hamiltona w grafie
+     * @param adjacencyMatrix graf w postaci macierzy sasiedztwa
+     * @param path tablica do przechowywania cyklu Hamiltona
+     * @param pos aktualny wierzcholek
+*/
+    static bool hamiltonCycle(AdjacencyMatrix& adjacencyMatrix, int path[], int pos);
 
 
 };
