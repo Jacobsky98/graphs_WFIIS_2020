@@ -188,18 +188,6 @@ void Graph::randomEuler(unsigned int n)
 {
     for(int i = 0; i < 1000; i++)
     {
-        // std::vector<int> degree_sequence;
-        // for(int k = 0; k < n; k++)
-        // {
-        //     degree_sequence.push_back(2*rand()%(n/2));
-        // }
-        // AdjacencyList adjacencyList = constuctGraphFromDegreeSequence(degree_sequence);
-        // int connectivity = 0;
-        // for(auto item : adjacencyList.getList())
-        // {
-        //     if(item.size() > 0) 
-        //         connectivity++;
-        // }
         double prob = (double)rand() / RAND_MAX;
         AdjacencyList adjacencyList = Graph::randomByProbability(n, prob);
         if(1 == 1)
@@ -396,38 +384,57 @@ AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
     }
 }
 
-AdjacencyList Graph::generateKRegularGraph(unsigned int n, unsigned int k)
+AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned int k)
 {
+    if(((n*k)%2 == 1) || (k >= n) || (k < 0))
+    {
+        std::cout << "Nie da sie skonstruowac grafu " << k << "-regularnego o " << n << " wierzcholkach\n";
+        return AdjacencyList();
+    }
     std::vector<std::list<int>> list;
     list.resize(n);
+    if(k == 0)
+        return AdjacencyList(list);
+    int i = 0;
+    int generated_edges = 0;
     AdjacencyList adjacencyList(list);
-    for(int i = 0; i < n; i++)
+    while(generated_edges != n*k)
     {
-        bool current_edges[n];
-        for(int k = 0; k < n; k++)
+        generated_edges = 0;
+        adjacencyList = AdjacencyList(list);
+        for(i = 0; i < n; i++)
         {
-            current_edges[k] = false;
-        }
-        current_edges[i] = true;
-        auto tmp = adjacencyList.getList();
-        for(auto k : tmp[i])
-        {
-            current_edges[k] = true;
-        }
-        while(tmp[i].size() != k+1)
-        {
-            // int random_vertex = rand()%(n-i)+i;
-            int random_vertex = rand()%(n);
-            if(current_edges[random_vertex] ==  false)
+            int it = 0;
+            bool current_edges[n];
+            for(int k = 0; k < n; k++)
             {
-                adjacencyList.addEdge(i, random_vertex);
-            }    
-            tmp = adjacencyList.getList();
-            adjacencyList.print(std::cout);
+                current_edges[k] = false;
+            }
+            current_edges[i] = true;
+            auto tmp = adjacencyList.getList();
+            for(auto k : tmp[i])
+            {
+                current_edges[k] = true;
+            }
+            while(tmp[i].size() != k && it < 10)
+            {
+                int random_vertex = i+rand()%(n-i)+1;
+                if(current_edges[random_vertex] ==  false && tmp[random_vertex].size() < k)
+                {
+                    adjacencyList.addEdge(i, random_vertex);
+                    generated_edges += 2;
+                }    
+                tmp = adjacencyList.getList();
+                it++;
+            }
+            if(it == 10)
+                i = n + it;
 
+            if(generated_edges == n*k)
+                break;
         }
     }
     AdjacencyList test(list);
     adjacencyList.print(std::cout);
-    return AdjacencyList(list);
+    return AdjacencyList(adjacencyList.getList());
 }
