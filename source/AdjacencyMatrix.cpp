@@ -105,6 +105,12 @@ std::vector<std::vector<int>> AdjacencyMatrix::getMatrix() const
     return matrix;
 }
 
+void AdjacencyMatrix::setValue(int x, int y, int value)
+{
+    matrix[x][y] = value;
+    matrix[y][x] = value;
+}
+
 void AdjacencyMatrix::vectorToMatrix(std::vector<int> vec, int rowsize)
 {
     matrix = std::vector<std::vector<int>> (rowsize, std::vector<int>(rowsize));

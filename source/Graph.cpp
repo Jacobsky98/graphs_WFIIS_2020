@@ -130,101 +130,304 @@ AdjacencyList Graph::constuctGraphFromDegreeSequence(std::vector<int>& A)
     return AdjacencyList();
 }
 
-void Graph::largestComponent(AdjacencyMatrix adjacencyMatrix)
-{
-    int current_max = INT32_MIN;
-    int current_count[1] = {0};
 
-    std::vector<std::vector<int>> matrix = adjacencyMatrix.getMatrix();
-    int n = matrix.size();
-    int m = matrix[0].size();
+
+
+void Graph::largestComponent(AdjacencyList adjacencyList)
+{
+    int nr = 0;
+    std::vector<std::list<int>> list = adjacencyList.getList();
+    int n = list.size();
+    int comp[n];
     for(int i = 0; i < n; i++)
     {
-        for(int j = 0; j < m; j++)
+        comp[i] = -1;
+    }
+    for(int i = 0; i < n; i++)
+    {
+        if(comp[i] == -1)
         {
-            int visited[n][m] = {0};
-            *current_count = 0;
+            nr += 1;
+            comp[i] = nr;
+            Graph::components_r(nr, i, list, comp);
+        }
+    }
 
-            if(j+1 < m)
+    int counter_printed_elements = 0;
+    int list_nr = 1;
+    int largest = 0;
+    int count_largest = 0;
+    int largest_id = 0;
+    while(counter_printed_elements != n)
+    {   
+        std::cout << list_nr << ") ";
+        for(int i = 0; i < n; i++)
+        {
+            if(list_nr == comp[i])
             {
-                //Graph::breadthFirstSearch([i][j], matrix[i][j+1], i, j, matrix, visited, current_count);
-            
-                
+                std::cout << i << " ";
+                counter_printed_elements++;
+                count_largest++;
+            }
+        }
+        if(largest < count_largest)
+        {
+            largest = count_largest;
+            count_largest = 0;
+            largest_id = list_nr;
+        }
+        list_nr++;
+        std::cout << "\n";
+    }
+    std::cout << "Najwieksza skladowa ma numer " << largest_id << ".\n";
+
+}
+
+
+void Graph::randomEuler(unsigned int n)
+{
+    for(int i = 0; i < 1000; i++)
+    {
+        // std::vector<int> degree_sequence;
+        // for(int k = 0; k < n; k++)
+        // {
+        //     degree_sequence.push_back(2*rand()%(n/2));
+        // }
+        // AdjacencyList adjacencyList = constuctGraphFromDegreeSequence(degree_sequence);
+        // int connectivity = 0;
+        // for(auto item : adjacencyList.getList())
+        // {
+        //     if(item.size() > 0) 
+        //         connectivity++;
+        // }
+        double prob = (double)rand() / RAND_MAX;
+        AdjacencyList adjacencyList = Graph::randomByProbability(n, prob);
+        if(1 == 1)
+        {
+            AdjacencyMatrix adjacencyMatrix;
+            adjacencyMatrix.convertFromList(adjacencyList);
+
+            int it = 0;
+            // std::cout << "i=" << i <<" size = " << degree_sequence.size()<< "\n";
+            bool found_cycle = false;;
+            // bool found_cycle = findEulerCycle(adjacencyMatrix);
+            while(!found_cycle && it < 100)
+            {
+                // std::cout << "it=" << it<< "\n";
+                AdjacencyMatrix tmp(adjacencyMatrix);
+                found_cycle = findEulerCycle(tmp);
+                if(found_cycle)
+                    break;
+                randomizeEdges(rand()%n, adjacencyMatrix);
+                it++;
+            }
+            if(found_cycle)
+            {
+                std::cout << "Graf:\n";
+                adjacencyMatrix.print(std::cout);
+                return;
+            }
+        }
+    }
+}
+
+
+
+bool Graph::findEulerCycle(AdjacencyMatrix& adjacencyMatrix)
+{
+    std::vector<std::vector<int>> matrix = adjacencyMatrix.getMatrix();
+    int n = matrix.size();
+    if(n == 0)
+        return false;
+    std::vector<int> degree(n);
+    
+    for (int i = 0; i < n; ++i) {
+            degree.push_back(0);
+            for (int j = 0; j < n; ++j)
+                degree[i] += matrix[i][j];
+    }
+
+    int first = 0;
+    while (!degree[first])
+        ++first;
+
+    int v1 = -1, v2 = -1;
+    bool bad = false;
+    for (int i = 0; i < n; ++i) {
+        if (degree[i] & 1) {
+            if (v1 == -1)
+                v1 = i;
+            else if (v2 == -1)
+                v2 = i;
+            else
+                bad = true;
+        }
+    }
+
+    if (v1 != -1)
+        ++matrix[v1][v2], ++matrix[v2][v1];
+
+    std::stack<int> st;
+    st.push(first);
+    std::vector<int> res;
+    while (!st.empty()) {
+        int v = st.top();
+        int i;
+        for (i = 0; i < n; ++i)
+            if (matrix[v][i])
+                break;
+        if (i == n) {
+            res.push_back(v);
+            st.pop();
+        } else {
+            --matrix[v][i];
+            --matrix[i][v];
+            st.push(i);
+        }
+    }
+
+    if (v1 != -1) {
+        for (size_t i = 0; i + 1 < res.size(); ++i) {
+            if ((res[i] == v1 && res[i + 1] == v2) ||
+                (res[i] == v2 && res[i + 1] == v1)) {
+                std::vector<int> res2;
+                for (size_t j = i + 1; j < res.size(); ++j)
+                    res2.push_back(res[j]);
+                for (size_t j = 1; j <= i; ++j)
+                    res2.push_back(res[j]);
+                res = res2;
+                break;
             }
         }
     }
 
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (matrix[i][j])
+                bad = true;
+        }
+    }
+
+    if (!bad) {
+        std::cout << "\nCykl Eulera:\t";
+        for (int x : res)
+            std::cout << x << " ";
+        return true;
+    }
+    return false;
 }
 
-void breadthFirstSearch(int x, int y, int i, int j, std::vector<std::vector<int>> matrix, int** visited, int* current_count)
+
+
+
+void Graph::components_r(int nr, int i, std::vector<std::list<int>> list, int* comp)
 {
-    if (x != y) 
-        return; 
-  
-    visited[i][j] = 1; 
-    *current_count++; 
-  
-    // x_move and y_move arrays 
-    // are the possible movements 
-    // in x or y direction 
-    int x_move[] = { 0, 0, 1, -1 }; 
-    int y_move[] = { 1, -1, 0, 0 }; 
-  
-    // checks all four points connected with input[i][j] 
-    // for (int u = 0; u < 4; u++) 
-    //     if (is_valid(i + y_move[u], j + x_move[u], x, input)) 
-    //         BFS(x, y, i + y_move[u], j + x_move[u], input); 
+    int n = list[i].size();
+    std::list<int>::iterator it = list[i].begin();
+    for(int l = 0; l < n; l++)
+    {
+        // std::cout << *it << "\n";
+        if(comp[*it] == -1)
+        {
+            comp[*it] = nr;
+            Graph::components_r(nr, *it, list, comp);
+        }
+        std::advance(it, 1);
+    }
 }
+
+
 
 
 AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
 {
-    srand(time(NULL));
-    AdjacencyList adj = graph.convertToList();
+    try{
+        srand(time(NULL));
+        AdjacencyList adj = graph.convertToList();
 
-    int firstEdge[2] = {-1, -1};
-    int secondEdge[2] = {-1, -1};
+        int firstEdge[2] = {-1, -1};
+        int secondEdge[2] = {-1, -1};
 
-    bool reRoll = true;
-    for(int i = 0; i < howMany; i++)
-    {
-        auto list = adj.getList();
-        while(reRoll)
+        bool reRoll = true;
+        for(int i = 0; i < howMany; i++)
         {
-            reRoll = false;
-            firstEdge[0] = rand() % list.size();
-            if(list[firstEdge[0]].size() == 0)
+            auto list = adj.getList();
+            while(reRoll)
             {
-                reRoll = true;
-                continue;
+                reRoll = false;
+                firstEdge[0] = rand() % list.size();
+                if(list[firstEdge[0]].size() == 0)
+                {
+                    reRoll = true;
+                    continue;
+                }
+                int index = rand() % list[firstEdge[0]].size();
+                auto it = std::next(list[firstEdge[0]].begin(), index);
+                firstEdge[1] = *it;
             }
-            int index = rand() % list[firstEdge[0]].size();
-            auto it = std::next(list[firstEdge[0]].begin(), index);
-            firstEdge[1] = *it;
+            do
+            {
+                reRoll = false;
+                secondEdge[0] = rand() % list.size();
+                if(secondEdge[0] == firstEdge[0] || secondEdge[0] == firstEdge[1])
+                {
+                    reRoll = true;
+                    continue;
+                }
+                int index = rand() % list[secondEdge[0]].size();
+                auto it = std::next(list[secondEdge[0]].begin(), index);
+                secondEdge[1] = *it;
+                if(secondEdge[1] == firstEdge[0] || secondEdge[1] == firstEdge[1])
+                {
+                    reRoll = true;
+                    continue;
+                }
+            }while(reRoll);
+
+            adj.removeEdge(firstEdge[0], firstEdge[1]);
+            adj.removeEdge(secondEdge[0], secondEdge[1]);
+            adj.addEdge(firstEdge[0], secondEdge[1]);
+            adj.addEdge(firstEdge[1], secondEdge[0]);
         }
-        do
-        {
-            reRoll = false;
-            secondEdge[0] = rand() % list.size();
-            if(secondEdge[0] == firstEdge[0] || secondEdge[0] == firstEdge[1])
-            {
-                reRoll = true;
-                continue;
-            }
-            int index = rand() % list[secondEdge[0]].size();
-            auto it = std::next(list[secondEdge[0]].begin(), index);
-            secondEdge[1] = *it;
-            if(secondEdge[1] == firstEdge[0] || secondEdge[1] == firstEdge[1])
-            {
-                reRoll = true;
-                continue;
-            }
-        }while(reRoll);
+        return adj;
+    } catch(std::exception e)
+    {
 
-        adj.removeEdge(firstEdge[0], firstEdge[1]);
-        adj.removeEdge(secondEdge[0], secondEdge[1]);
-        adj.addEdge(firstEdge[0], secondEdge[1]);
-        adj.addEdge(firstEdge[1], secondEdge[0]);
     }
-    return adj;
+}
+
+AdjacencyList Graph::generateKRegularGraph(unsigned int n, unsigned int k)
+{
+    std::vector<std::list<int>> list;
+    list.resize(n);
+    AdjacencyList adjacencyList(list);
+    for(int i = 0; i < n; i++)
+    {
+        bool current_edges[n];
+        for(int k = 0; k < n; k++)
+        {
+            current_edges[k] = false;
+        }
+        current_edges[i] = true;
+        auto tmp = adjacencyList.getList();
+        for(auto k : tmp[i])
+        {
+            current_edges[k] = true;
+        }
+        while(tmp[i].size() != k+1)
+        {
+            // int random_vertex = rand()%(n-i)+i;
+            int random_vertex = rand()%(n);
+            if(current_edges[random_vertex] ==  false)
+            {
+                adjacencyList.addEdge(i, random_vertex);
+            }    
+            tmp = adjacencyList.getList();
+            adjacencyList.print(std::cout);
+
+        }
+    }
+    AdjacencyList test(list);
+    adjacencyList.print(std::cout);
+    return AdjacencyList(list);
 }

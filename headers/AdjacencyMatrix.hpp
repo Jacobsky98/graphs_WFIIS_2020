@@ -45,6 +45,8 @@ public:
 
     std::vector<std::vector<int>> getMatrix() const;
 
+    void setValue(int x, int y, int value);
+    
 private:
     std::vector<std::vector<int>> matrix;
     void vectorToMatrix(std::vector<int> vec, int rowsize);

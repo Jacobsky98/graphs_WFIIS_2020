@@ -43,20 +43,19 @@ void project_1() {
 }
 
 void project_2() {
-    // zadanie 1
+        // zadanie 1
     
-    std::vector<int> A1 = {3,2,1,0}; // nie
-    AdjacencyList::constuctGraphFromDegreeSequence(A1);
-    std::vector<int> A2 = {3,3,3,3}; // tak
-    AdjacencyList::constuctGraphFromDegreeSequence(A2);
-    std::vector<int> A3 = {4,4,3,1,2}; // nie
-    AdjacencyList::constuctGraphFromDegreeSequence(A3);
-    std::vector<int> A4 = {3,3,3,2,2,1}; // tak
-    AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
-    std::ofstream file("output-p2-z1.dat");
+    // std::vector<int> A1 = {3,2,1,0}; // nie
+    // AdjacencyList::constuctGraphFromDegreeSequence(A1);
+    // std::vector<int> A2 = {3,3,3,3}; // tak
+    // AdjacencyList::constuctGraphFromDegreeSequence(A2);
+    // std::vector<int> A3 = {4,4,3,1,2}; // nie
+    // AdjacencyList::constuctGraphFromDegreeSequence(A3);
+    // std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
+    // AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
+    // Graph::largestComponent(adjacencyList);
+    std::ofstream file("output.dat");
     Graph *graph;
-    graph = &adjacencyList;
-    graph -> printToFile(file);
 
     // zadanie 3
     // AdjacencyMatrix adjacencyMatrix(
@@ -68,19 +67,36 @@ void project_2() {
     //                     1, 1, 3, 1, 1, 4, 4, 4);
     // Graph::largestComponent(adjacencyMatrix);
 
+    AdjacencyMatrix g1(
+    0, 1, 1, 1, 1,
+    1, 0, 1, 1, 0,
+    1, 1, 0, 1, 0,
+    1, 1, 1, 0, 1,
+    1, 0, 0, 1, 0);
+//    g1.print(std::cout);
+    graph = &g1;
+    graph -> printToFile(file);
+    g1.print(std::cout);
+    // Graph::findEulerCycle(g1); 
+
+    // Graph::randomEuler(10);
+
+    
 }
 
 int main()
 {
-    //project_2();
-    IncidenceMatrix test = IncidenceMatrix::loadFromFile("input/p1/incMat.txt");
-    Graph* grp = &test;
-    std::cout << grp << std::endl;
-    std::cout << grp << std::endl;
+    // project_2();
+        Graph::generateKRegularGraph(7, 2);
 
-    grp->addEdge(1,2);
+    // IncidenceMatrix test = IncidenceMatrix::loadFromFile("input/p1/incMat.txt");
+    // Graph* grp = &test;
+    // std::cout << grp << std::endl;
+    // std::cout << grp << std::endl;
+
+    // grp->addEdge(1,2);
     
-    std::cout << grp << std::endl;
+    // std::cout << grp << std::endl;
     //grp->removeEdge(0,2);
     
     //std::cout << grp << std::endl;
