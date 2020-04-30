@@ -122,3 +122,41 @@ void AdjacencyMatrix::vectorToMatrix(std::vector<int> vec, int rowsize)
         }
     }
 }
+
+bool AdjacencyMatrix::doesEdgeExists(int firstVertex, int secondVertex) const
+{
+    if(matrix[firstVertex][secondVertex])
+        return true;
+    else
+        return false;
+}
+bool AdjacencyMatrix::isVertexIsolated(int vertex) const
+{
+    if(dimOfVertex(vertex) == 0)
+        return true;
+    else
+        return false;
+}
+int AdjacencyMatrix::dimOfVertex(int vertex)const
+{
+    int result = 0;
+    for(int i = 0; i < getVertexAmount(); i++)
+    {
+        result += matrix[vertex][i];
+    }
+    return result;
+}
+std::vector<int> AdjacencyMatrix::getVectorOfVerticesConnectedTo(int vertex) const
+{
+    std::vector<int> result;
+    for(int i = 0; i < getVertexAmount(); i++)
+    {
+        if(matrix[vertex][i])
+            result.push_back(i);
+    }
+    return result;
+}
+int AdjacencyMatrix::getVertexAmount() const
+{
+    return matrix.size();
+}

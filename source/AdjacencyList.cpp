@@ -117,3 +117,45 @@ std::vector<std::list<int>> AdjacencyList::getList() const
 {
     return list;
 }
+
+bool AdjacencyList::doesEdgeExists(int firstVertex, int secondVertex) const
+{
+    bool result = false;
+    for(auto connection:list[firstVertex])
+    {
+        if(connection == secondVertex)
+        {
+            result = true;
+            break;
+        }
+    }
+    return result;
+}
+
+bool AdjacencyList::isVertexIsolated(int vertex) const
+{
+    if(dimOfVertex(vertex) == 0)
+        return true;
+    else
+        return false;
+}
+
+int AdjacencyList::dimOfVertex(int vertex) const
+{
+    return list[vertex].size();
+}
+
+std::vector<int> AdjacencyList::getVectorOfVerticesConnectedTo(int vertex) const
+{
+    std::vector<int> result;
+    for(auto vertex: list[vertex])
+    {
+        result.push_back(vertex);
+    }
+    return result;
+}
+
+int AdjacencyList::getVertexAmount() const
+{
+    return list.size();
+}
