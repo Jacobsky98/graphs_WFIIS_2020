@@ -43,7 +43,7 @@ void project_1() {
 }
 
 void project_2() {
-        // zadanie 1
+    // zadanie 1
     
     // std::vector<int> A1 = {3,2,1,0}; // nie
     // AdjacencyList::constuctGraphFromDegreeSequence(A1);
@@ -53,32 +53,49 @@ void project_2() {
     // AdjacencyList::constuctGraphFromDegreeSequence(A3);
     // std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
     // AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
-    // Graph::largestComponent(adjacencyList);
-    std::ofstream file("output.dat");
-    Graph *graph;
+    // std::ofstream file("output.dat");
+    // Graph *graph = & djacencyList;
+    // graph -> printToFile(file);
+
+    // zadanie 2
+    
+    // std::ofstream file1("output-p2-z2-1.dat"); //Zmienić gnuplot.sh przy pokazywaniu!
+    // std::ofstream file2("output-p2-z2-2.dat");
+    // AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p1/adjList.txt");
+    //Graph *graph = &adjacencyList;
+    // graph -> printToFile(file1);
+    // adjacencyList.print(std::cout);
+    // std::cout << std::endl;
+    // adjacencyList = Graph::randomizeEdges(10, adjacencyList);
+    // graph -> printToFile(file2);
+    // adjacencyList.print(std::cout);
+    // std::cout << std::endl;
 
     // zadanie 3
-    // AdjacencyMatrix adjacencyMatrix(
-    //                     1, 4, 4, 4, 4, 3, 3, 1, 
-    //                     2, 1, 1, 4, 3, 3, 1, 1, 
-    //                     3, 2, 1, 1, 2, 3, 2, 1, 
-    //                     3, 3, 2, 1, 2, 2, 2, 2, 
-    //                     3, 1, 3, 1, 1, 4, 4, 4, 
-    //                     1, 1, 3, 1, 1, 4, 4, 4);
-    // Graph::largestComponent(adjacencyMatrix);
+    
+    // std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
+    // AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
+    // Graph::largestComponent(adjacencyList);
+    // adjacencyList.print(std::cout);
+    // std::ofstream file("output.dat");
+    // Graph *graph = & adjacencyList;
+    // graph -> printToFile(file);
 
-    AdjacencyMatrix g1(
-    0, 1, 1, 1, 1,
-    1, 0, 1, 1, 0,
-    1, 1, 0, 1, 0,
-    1, 1, 1, 0, 1,
-    1, 0, 0, 1, 0);
-//    g1.print(std::cout);
-    graph = &g1;
-    graph -> printToFile(file);
-    g1.print(std::cout);
+    // zadanie 4
+
+    // AdjacencyMatrix g1(
+    // 0, 1, 1, 1, 1,
+    // 1, 0, 1, 1, 0,
+    // 1, 1, 0, 1, 0,
+    // 1, 1, 1, 0, 1,
+    // 1, 0, 0, 1, 0);
+    // g1.convertToList().print(std::cout);
+    // std::cout << std::endl;
+    // Graph *graph = &g1;
+    // std::ofstream file("output.dat");
+    // graph -> printToFile(file);
+    // g1.print(std::cout);
     // Graph::findEulerCycle(g1); 
-
     // Graph::randomEuler(10);
 
     // zadanie 5
@@ -90,35 +107,22 @@ void project_2() {
 
     // zadanie 6
     // przykladowy wejsciowy graf z rysunku 4
-    AdjacencyMatrix z6(
-        0,1,0,1,1,0,0,0,
-        1,0,1,0,1,1,0,0,
-        0,1,0,1,0,0,1,0,
-        1,0,1,0,0,1,1,0,
-        1,1,0,0,0,0,0,1,
-        0,1,0,1,0,0,0,1,
-        0,0,1,1,0,0,0,1,
-        0,0,0,0,1,1,1,0
-                        );
-    Graph::hamiltonCycleFind(z6);
+    // AdjacencyMatrix z6(
+    //     0,1,0,1,1,0,0,0,
+    //     1,0,1,0,1,1,0,0,
+    //     0,1,0,1,0,0,1,0,
+    //     1,0,1,0,0,1,1,0,
+    //     1,1,0,0,0,0,0,1,
+    //     0,1,0,1,0,0,0,1,
+    //     0,0,1,1,0,0,0,1,
+    //     0,0,0,0,1,1,1,0
+    //                     );
+    // Graph::hamiltonCycleFind(z6);
     
 }
 
 int main()
 {
     project_2();
-
-    // IncidenceMatrix test = IncidenceMatrix::loadFromFile("input/p1/incMat.txt");
-    // Graph* grp = &test;
-    // std::cout << grp << std::endl;
-    // std::cout << grp << std::endl;
-
-    // grp->addEdge(1,2);
-    
-    // std::cout << grp << std::endl;
-    //grp->removeEdge(0,2);
-    
-    //std::cout << grp << std::endl;
-
     return 0;
 }

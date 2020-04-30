@@ -190,31 +190,29 @@ void Graph::randomEuler(unsigned int n)
     {
         double prob = (double)rand() / RAND_MAX;
         AdjacencyList adjacencyList = Graph::randomByProbability(n, prob);
-        if(1 == 1)
-        {
-            AdjacencyMatrix adjacencyMatrix;
-            adjacencyMatrix.convertFromList(adjacencyList);
+        
+        AdjacencyMatrix adjacencyMatrix;
+        adjacencyMatrix.convertFromList(adjacencyList);
 
-            int it = 0;
-            // std::cout << "i=" << i <<" size = " << degree_sequence.size()<< "\n";
-            bool found_cycle = false;;
-            // bool found_cycle = findEulerCycle(adjacencyMatrix);
-            while(!found_cycle && it < 100)
-            {
-                // std::cout << "it=" << it<< "\n";
-                AdjacencyMatrix tmp(adjacencyMatrix);
-                found_cycle = findEulerCycle(tmp);
-                if(found_cycle)
-                    break;
-                randomizeEdges(rand()%n, adjacencyMatrix);
-                it++;
-            }
+        int it = 0;
+        // std::cout << "i=" << i <<" size = " << degree_sequence.size()<< "\n";
+        bool found_cycle = false;;
+        // bool found_cycle = findEulerCycle(adjacencyMatrix);
+        while(!found_cycle && it < 100)
+        {
+            // std::cout << "it=" << it<< "\n";
+            AdjacencyMatrix tmp(adjacencyMatrix);
+            found_cycle = findEulerCycle(tmp);
             if(found_cycle)
-            {
-                std::cout << "Graf:\n";
-                adjacencyMatrix.print(std::cout);
-                return;
-            }
+                break;
+            randomizeEdges(rand()%(n/2), adjacencyMatrix);
+            it++;
+        }
+        if(found_cycle)
+        {
+            std::cout << "\nGraf:\n";
+            adjacencyMatrix.print(std::cout);
+            return;
         }
     }
 }
@@ -412,6 +410,11 @@ AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
                 reRoll = false;
                 secondEdge[0] = rand() % list.size();
                 if(secondEdge[0] == firstEdge[0] || secondEdge[0] == firstEdge[1])
+                {
+                    reRoll = true;
+                    continue;
+                }
+                if(list[secondEdge[0]].size() == 0)
                 {
                     reRoll = true;
                     continue;
