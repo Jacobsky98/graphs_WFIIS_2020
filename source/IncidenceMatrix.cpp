@@ -44,7 +44,7 @@ Graph &IncidenceMatrix::addVertex()
 Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 {
     bool edgeAlreadyExists = false;
-    for(int column = 0; column < matrix[0].size(); column++)
+    for(long unsigned int column = 0; column < matrix[0].size(); column++)
     {
         if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
         {
@@ -53,7 +53,7 @@ Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
     }
     if(!edgeAlreadyExists)
     {    
-        for (unsigned int row = 0; row < _n; ++row)
+        for (int row = 0; row < _n; ++row)
         {
             if(row == firstVertex || row == secondVertex)
                 matrix[row].push_back(1);
@@ -66,7 +66,7 @@ Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
 
 Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
 {
-    for(int column = 0; column < matrix[0].size(); column++)
+    for(long unsigned int column = 0; column < matrix[0].size(); column++)
     {
         if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
         {
@@ -140,4 +140,49 @@ std::ostream &IncidenceMatrix::print(std::ostream &o) const
 std::ostream &IncidenceMatrix::printToFile(std::ostream &o) const
 {
     return convertToList().printToFile(o);
+}
+
+
+bool IncidenceMatrix::doesEdgeExists(int firstVertex, int secondVertex) const
+{
+    for(long unsigned int column = 0; column < matrix[0].size(); column++)
+    {
+        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
+            return true;
+    }
+    return false;
+}
+    
+bool IncidenceMatrix::isVertexIsolated(int vertex) const
+{
+    if(dimOfVertex(vertex) == 0)
+        return true;
+    else
+        return false;
+}
+    
+int IncidenceMatrix::dimOfVertex(int vertex)const
+{
+    int result = 0;
+    for(long unsigned int column = 0; column < matrix[0].size(); column++)
+    {
+        result += matrix[vertex][column];
+    }
+    return result;
+}
+    
+std::vector<int> IncidenceMatrix::getVectorOfVerticesConnectedTo(int vertex) const
+{
+    std::vector<int> result;
+    for(int vertexToCheck = 0; vertexToCheck < _n; vertexToCheck++)
+    {
+        if(vertex != vertexToCheck && doesEdgeExists(vertex, vertexToCheck))
+            result.push_back(vertexToCheck);
+    }
+    return result;
+}
+    
+int IncidenceMatrix::getVertexAmount() const
+{
+    return _n;
 }

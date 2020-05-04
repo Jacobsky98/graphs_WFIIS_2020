@@ -381,64 +381,58 @@ bool Graph::hamiltonCycle(AdjacencyMatrix& adjacencyMatrix, int path[], int pos)
 
 AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
 {
-    try{
-        srand(time(NULL));
-        AdjacencyList adj = graph.convertToList();
+    srand(time(NULL));
+    AdjacencyList adj = graph.convertToList();
+    int firstEdge[2] = {-1, -1};
+    int secondEdge[2] = {-1, -1};
 
-        int firstEdge[2] = {-1, -1};
-        int secondEdge[2] = {-1, -1};
-
-        bool reRoll = true;
-        for(int i = 0; i < howMany; i++)
-        {
-            auto list = adj.getList();
-            while(reRoll)
-            {
-                reRoll = false;
-                firstEdge[0] = rand() % list.size();
-                if(list[firstEdge[0]].size() == 0)
-                {
-                    reRoll = true;
-                    continue;
-                }
-                int index = rand() % list[firstEdge[0]].size();
-                auto it = std::next(list[firstEdge[0]].begin(), index);
-                firstEdge[1] = *it;
-            }
-            do
-            {
-                reRoll = false;
-                secondEdge[0] = rand() % list.size();
-                if(secondEdge[0] == firstEdge[0] || secondEdge[0] == firstEdge[1])
-                {
-                    reRoll = true;
-                    continue;
-                }
-                if(list[secondEdge[0]].size() == 0)
-                {
-                    reRoll = true;
-                    continue;
-                }
-                int index = rand() % list[secondEdge[0]].size();
-                auto it = std::next(list[secondEdge[0]].begin(), index);
-                secondEdge[1] = *it;
-                if(secondEdge[1] == firstEdge[0] || secondEdge[1] == firstEdge[1])
-                {
-                    reRoll = true;
-                    continue;
-                }
-            }while(reRoll);
-
-            adj.removeEdge(firstEdge[0], firstEdge[1]);
-            adj.removeEdge(secondEdge[0], secondEdge[1]);
-            adj.addEdge(firstEdge[0], secondEdge[1]);
-            adj.addEdge(firstEdge[1], secondEdge[0]);
-        }
-        return adj;
-    } catch(std::exception e)
+    bool reRoll = true;
+    for(unsigned int i = 0; i < howMany; i++)
     {
+        do
+        {
+            reRoll = false;
+            firstEdge[0] = rand() % adj.getVertexAmount();
+            if(adj.isVertexIsolated(firstEdge[0]))
+            {
+                reRoll = true;
+                continue;
+            }
+            int index = rand() % adj.dimOfVertex(firstEdge[0]);
+            firstEdge[1] = adj.getVectorOfVerticesConnectedTo(firstEdge[0])[index];
 
+            secondEdge[0] = rand() % adj.getVertexAmount();
+            if(secondEdge[0] == firstEdge[0] || secondEdge[0] == firstEdge[1])
+            {
+                reRoll = true;
+                continue;
+            }
+            if(adj.isVertexIsolated(secondEdge[0]))
+            {
+                reRoll = true;
+                continue;
+            }
+            index = rand() % adj.dimOfVertex(secondEdge[0]);
+            secondEdge[1] = adj.getVectorOfVerticesConnectedTo(secondEdge[0])[index];;
+            if(secondEdge[1] == firstEdge[0] || secondEdge[1] == firstEdge[1])
+            {
+                reRoll = true;
+                continue;
+            }
+            if(adj.doesEdgeExists(firstEdge[0], secondEdge[1]) ||
+               adj.doesEdgeExists(secondEdge[0], firstEdge[1]) )
+            {
+                reRoll = true;
+                continue;
+            }
+        }while(reRoll);
+
+        adj.removeEdge(firstEdge[0], firstEdge[1]);
+        adj.removeEdge(secondEdge[0], secondEdge[1]);
+        adj.addEdge(firstEdge[0], secondEdge[1]);
+        adj.addEdge(firstEdge[1], secondEdge[0]);
     }
+    return adj;
 }
 
 AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned int k)
@@ -452,10 +446,10 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
     list.resize(n);
     if(k == 0)
         return AdjacencyList(list);
-    int i = 0;
+    unsigned int i = 0;
     int generated_edges = 0;
     AdjacencyList adjacencyList(list);
-    while(generated_edges != n*k)
+    while((unsigned int)generated_edges != n*k)
     {
         generated_edges = 0;
         adjacencyList = AdjacencyList(list);
@@ -463,7 +457,7 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
         {
             int it = 0;
             bool current_edges[n];
-            for(int k = 0; k < n; k++)
+            for(unsigned int k = 0; k < n; k++)
             {
                 current_edges[k] = false;
             }
@@ -487,7 +481,7 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
             if(it == 10)
                 i = n + it;
 
-            if(generated_edges == n*k)
+            if((unsigned int)generated_edges == n*k)
                 break;
         }
     }

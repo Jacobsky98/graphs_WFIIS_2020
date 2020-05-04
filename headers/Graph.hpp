@@ -145,6 +145,36 @@ public:
 */
     static bool hamiltonCycleFind(AdjacencyMatrix& adjacencyMatrix);
 
+    /*
+    *   Sprawdza czy krawędź o podanych wierzchołkach istnieje
+    *   @param  firstVertex numer pierwszego wierzchołka
+    *   @param  secondVertex numer drugiego wierzchołka
+    */
+    virtual bool doesEdgeExists(int firstVertex, int secondVertex) const = 0;
+
+    /*
+    *   Sprawdza czy wierzchołek jest izolowany
+    *   @param vertex Numer sprawdzanego wierzchołka
+    */
+    virtual bool isVertexIsolated(int vertex) const = 0;
+
+    /*
+    *   Zlicza wymiar wierzchołka
+    *   @param vertex Numer wierzchołka
+    */
+    virtual int dimOfVertex(int vertex)const = 0;
+
+    /*
+    *   Generuje wektor wierzchołków połączonych z zadanym wierzchołkiem
+    *   @param vertex Numer wierzchołka
+    */
+    virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const = 0;
+
+    /*
+    *   Zlicza wierzchołki
+    */
+    virtual int getVertexAmount() const = 0;
+
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych

@@ -28,6 +28,15 @@ public:
 
     virtual std::ostream &printToFile(std::ostream &o) const override;
 
+    virtual bool doesEdgeExists(int firstVertex, int secondVertex) const override;
+    
+    virtual bool isVertexIsolated(int vertex) const override;
+    
+    virtual int dimOfVertex(int vertex)const override;
+    
+    virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const override;
+    
+    virtual int getVertexAmount() const override;
 private:
     std::vector<std::vector<int>> matrix;
 
