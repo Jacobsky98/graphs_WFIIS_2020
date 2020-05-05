@@ -136,7 +136,7 @@ AdjacencyList Graph::constuctGraphFromDegreeSequence(std::vector<int>& A)
 void Graph::largestComponent(AdjacencyList adjacencyList)
 {
     int nr = 0;
-    std::vector<std::list<int>> list = adjacencyList.getList();
+    std::vector<std::list<Edge>> list = adjacencyList.getList();
     int n = list.size();
     int comp[n];
     for(int i = 0; i < n; i++)
@@ -306,17 +306,17 @@ bool Graph::findEulerCycle(AdjacencyMatrix& adjacencyMatrix)
 
 
 
-void Graph::components_r(int nr, int i, std::vector<std::list<int>> list, int* comp)
+void Graph::components_r(int nr, int i, std::vector<std::list<Edge>> list, int* comp)
 {
     int n = list[i].size();
-    std::list<int>::iterator it = list[i].begin();
+    std::list<Edge>::iterator it = list[i].begin();
     for(int l = 0; l < n; l++)
     {
         // std::cout << *it << "\n";
-        if(comp[*it] == -1)
+        if(comp[(*it).destVertex] == -1)
         {
-            comp[*it] = nr;
-            Graph::components_r(nr, *it, list, comp);
+            comp[(*it).destVertex] = nr;
+            Graph::components_r(nr, (*it).destVertex, list, comp);
         }
         std::advance(it, 1);
     }
@@ -442,7 +442,7 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
         std::cout << "Nie da sie skonstruowac grafu " << k << "-regularnego o " << n << " wierzcholkach\n";
         return AdjacencyList();
     }
-    std::vector<std::list<int>> list;
+    std::vector<std::list<Edge>> list;
     list.resize(n);
     if(k == 0)
         return AdjacencyList(list);
@@ -465,7 +465,7 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
             auto tmp = adjacencyList.getList();
             for(auto k : tmp[i])
             {
-                current_edges[k] = true;
+                current_edges[k.destVertex] = true;
             }
             while(tmp[i].size() != k && it < 10)
             {

@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-AdjacencyList::AdjacencyList(std::vector<std::list<int>> const &initializer) : list(initializer)
+AdjacencyList::AdjacencyList(std::vector<std::list<Edge>> const &initializer) : list(initializer)
 {}
 
 AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
@@ -14,12 +14,12 @@ AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
     std::string str;
     while(getline(file, str))
     {
-        adjacencyList->list.push_back(std::list<int>());
+        adjacencyList->list.push_back(std::list<Edge>());
         std::istringstream line(str);
         int variable;
         while(line >> variable)
         {
-            adjacencyList->list[i].push_back(variable);
+            adjacencyList->list[i].push_back(Edge(variable, 1));
         }
         i++;
     }
@@ -28,7 +28,7 @@ AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
 
 Graph &AdjacencyList::addVertex()
 {
-    std::list<int> newList;
+    std::list<Edge> newList;
     list.push_back(newList);
 
     return *this;
@@ -38,22 +38,30 @@ Graph &AdjacencyList::addVertex(unsigned int vertices)
     return Graph::addVertex(vertices);
 }
 
-Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex)
+Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex, int weight)
 {
-    list[firstVertex].push_back(secondVertex);
-    list[secondVertex].push_back(firstVertex);
-    list[firstVertex].sort();
-    list[secondVertex].sort();
-    list[firstVertex].unique();
-    list[secondVertex].unique();
+    auto comperator = [](const Edge & edge1, const Edge & edge2)
+    {
+        return edge1.destVertex < edge2.destVertex;
+    };
+
+    if(doesEdgeExists(firstVertex, secondVertex))
+        return *this;
+    else
+    {
+        list[firstVertex].push_back(Edge(secondVertex, weight));
+        list[secondVertex].push_back(Edge(firstVertex, weight));
+    }
+    list[firstVertex].sort(comperator);
+    list[secondVertex].sort(comperator);
 
     return *this;
 }
 
 Graph &AdjacencyList::removeEdge(int firstVertex, int secondVertex)
 {
-    list[firstVertex].remove(secondVertex);
-    list[secondVertex].remove(firstVertex);
+    list[firstVertex].remove(Edge(secondVertex));
+    list[secondVertex].remove(Edge(firstVertex));
     return *this;
 }
 
@@ -75,7 +83,7 @@ std::ostream &AdjacencyList::print(std::ostream &o) const
         o << i << ".\t";
         for(auto const& node: list[i])
         {
-            o << node << "\t";
+            o << node.destVertex << " (" << node.weight << ")" << "\t";
         }
         o << "\n";
     }
@@ -102,8 +110,8 @@ std::ostream &AdjacencyList::printToFile(std::ostream &o) const
 
         for (auto edge : list[i])
         {
-            x2 = radius * cos(angleIncrement * edge);
-            y2 = radius * sin(angleIncrement * edge);
+            x2 = radius * cos(angleIncrement * edge.destVertex);
+            y2 = radius * sin(angleIncrement * edge.destVertex);
             o << x1 << '\t' << y1 << std::endl;
             o << x2 << '\t' << y2 << std::endl;
             o << std::endl;
@@ -113,7 +121,7 @@ std::ostream &AdjacencyList::printToFile(std::ostream &o) const
     return o;
 }
 
-std::vector<std::list<int>> AdjacencyList::getList() const
+std::vector<std::list<Edge>> AdjacencyList::getList() const
 {
     return list;
 }
@@ -123,7 +131,7 @@ bool AdjacencyList::doesEdgeExists(int firstVertex, int secondVertex) const
     bool result = false;
     for(auto connection:list[firstVertex])
     {
-        if(connection == secondVertex)
+        if(connection.destVertex == secondVertex)
         {
             result = true;
             break;
@@ -148,9 +156,10 @@ int AdjacencyList::dimOfVertex(int vertex) const
 std::vector<int> AdjacencyList::getVectorOfVerticesConnectedTo(int vertex) const
 {
     std::vector<int> result;
-    for(auto vertex: list[vertex])
+    for(auto ver: list[vertex])
     {
-        result.push_back(vertex);
+        int tmp = ver.destVertex;
+        result.push_back(tmp);
     }
     return result;
 }

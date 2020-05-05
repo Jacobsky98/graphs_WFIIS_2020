@@ -37,10 +37,10 @@ Graph &AdjacencyMatrix::addVertex(unsigned int vertices)
     return Graph::addVertex(vertices);
 }
 
-Graph &AdjacencyMatrix::addEdge(int firstVertex, int secondVertex)
+Graph &AdjacencyMatrix::addEdge(int firstVertex, int secondVertex, int weight)
 {
-    matrix[firstVertex][secondVertex] = 1;
-    matrix[secondVertex][firstVertex] = 1;
+    matrix[firstVertex][secondVertex] = weight;
+    matrix[secondVertex][firstVertex] = weight;
 
     return *this;
 }
@@ -56,12 +56,12 @@ Graph &AdjacencyMatrix::removeEdge(int firstVertex, int secondVertex)
 AdjacencyList AdjacencyMatrix::convertToList() const
 {
     const int n = matrix.size();
-    std::vector<std::list<int>> list(n);
+    std::vector<std::list<Edge>> list(n);
 
     for (int i = 0; i < n; ++i)
         for (int j = 0; j < n; ++j)
             if (matrix[i][j] > 0)
-                list[i].push_back(j);
+                list[i].push_back(Edge(j, matrix[i][j]));
 
     return AdjacencyList(list);
 };
@@ -77,7 +77,7 @@ Graph &AdjacencyMatrix::convertFromList(AdjacencyList const &adjacencyList)
         std::vector<int> column(n);
         for (auto edge : list[i])
         {
-            column[edge] = 1;
+            column[edge.destVertex] = edge.weight;
         }
         matrix.push_back(column);
     }
@@ -142,7 +142,8 @@ int AdjacencyMatrix::dimOfVertex(int vertex)const
     int result = 0;
     for(int i = 0; i < getVertexAmount(); i++)
     {
-        result += matrix[vertex][i];
+        if(matrix[vertex][i] > 0)
+        result += 1;
     }
     return result;
 }

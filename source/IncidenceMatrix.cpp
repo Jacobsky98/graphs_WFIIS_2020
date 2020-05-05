@@ -41,22 +41,14 @@ Graph &IncidenceMatrix::addVertex()
     return *this;
 }
 
-Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex)
+Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex, int weight)
 {
-    bool edgeAlreadyExists = false;
-    for(long unsigned int column = 0; column < matrix[0].size(); column++)
-    {
-        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
-        {
-            edgeAlreadyExists = true;
-        }   
-    }
-    if(!edgeAlreadyExists)
+    if(!doesEdgeExists(firstVertex, secondVertex))
     {    
         for (int row = 0; row < _n; ++row)
         {
             if(row == firstVertex || row == secondVertex)
-                matrix[row].push_back(1);
+                matrix[row].push_back(weight);
             else
                 matrix[row].push_back(0);
         }
@@ -68,7 +60,7 @@ Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
 {
     for(long unsigned int column = 0; column < matrix[0].size(); column++)
     {
-        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
+        if(matrix[firstVertex][column] > 0 && matrix[secondVertex][column] > 0)
         {
             for(int row = 0; row < _n; row++)
                 matrix[row].erase(matrix[row].begin()+column);
@@ -80,8 +72,12 @@ Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
 
 AdjacencyList IncidenceMatrix::convertToList() const
 {
+    auto comperator = [](const Edge & edge1, const Edge & edge2)
+    {
+        return edge1.destVertex < edge2.destVertex;
+    };
     const int numberOfEdges = matrix[0].size();
-    std::vector<std::list<int>> list(_n);
+    std::vector<std::list<Edge>> list(_n);
     int first, second;
     for (int column = 0; column < numberOfEdges; ++column)
     {
@@ -96,12 +92,10 @@ AdjacencyList IncidenceMatrix::convertToList() const
                 second = row;
         
                 //zaklada ze graf jest prosty
-                list[first].push_back(second);
-                list[second].push_back(first);
-                list[first].sort();
-                list[second].sort();
-                list[first].unique();
-                list[second].unique();
+                list[first].push_back(Edge(second, matrix[row][column]));
+                list[second].push_back(Edge(first, matrix[row][column]));
+                list[first].sort(comperator);
+                list[second].sort(comperator);
                 break;
             }
         }
@@ -118,9 +112,9 @@ Graph &IncidenceMatrix::convertFromList(AdjacencyList const &adjacencyList)
     matrix.resize(_n);
     for (int first = 0; first < _n; first++)
     {
-        for (int second : list[first])
+        for (Edge second : list[first])
         {
-            addEdge(first, second);
+            addEdge(first, second.destVertex, second.weight);
         }
     }
     return *this;
@@ -147,7 +141,7 @@ bool IncidenceMatrix::doesEdgeExists(int firstVertex, int secondVertex) const
 {
     for(long unsigned int column = 0; column < matrix[0].size(); column++)
     {
-        if(matrix[firstVertex][column] == 1 && matrix[secondVertex][column] == 1)
+        if(matrix[firstVertex][column] > 0 && matrix[secondVertex][column] > 0)
             return true;
     }
     return false;
@@ -166,7 +160,8 @@ int IncidenceMatrix::dimOfVertex(int vertex)const
     int result = 0;
     for(long unsigned int column = 0; column < matrix[0].size(); column++)
     {
-        result += matrix[vertex][column];
+        if(matrix[vertex][column] > 0)
+            result += 1;
     }
     return result;
 }
