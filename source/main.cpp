@@ -121,6 +121,32 @@ void project_2() {
     
 }
 
+void project_3() 
+{
+
+    // Zadanie 1
+
+    AdjacencyList adjList = Graph::createRandomWeightedConnectedGraph(10, 0.2);
+    adjList.print(std::cout);
+    Graph *gr = &adjList;
+    std::ofstream file("output.dat");
+    gr->printToFile(file);
+
+    //Zadanie 2
+
+    Graph::dijkstraAlgorithm(*gr, 0, true);
+
+    //Zadanie 3
+
+    for(int vertex = 0; vertex < gr -> getVertexAmount(); vertex++)
+    {
+        std::vector<int> result = Graph::dijkstraAlgorithm(*gr, vertex, false);
+        for(auto i: result)
+            std::cout << i <<"\t";
+        std::cout << std::endl;
+    }
+}
+
 int main()
 {
     // AdjacencyMatrix adjMat = {  0, 1, 0, 1, 0,
@@ -129,6 +155,7 @@ int main()
     //                             1, 1, 1, 0, 0,
     //                             0, 0, 0, 0, 0};
     // project_1();
-    project_2();
+    // project_2();
+    project_3();
     return 0;
 }

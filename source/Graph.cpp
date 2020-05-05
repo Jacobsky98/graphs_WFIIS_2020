@@ -429,8 +429,8 @@ AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
 
         adj.removeEdge(firstEdge[0], firstEdge[1]);
         adj.removeEdge(secondEdge[0], secondEdge[1]);
-        adj.addEdge(firstEdge[0], secondEdge[1]);
-        adj.addEdge(firstEdge[1], secondEdge[0]);
+        adj.addEdge(firstEdge[0], secondEdge[1], rand()%10 + 1);
+        adj.addEdge(firstEdge[1], secondEdge[0], rand()%10 + 1);
     }
     return adj;
 }
@@ -488,4 +488,94 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
     AdjacencyList test(list);
     adjacencyList.print(std::cout);
     return AdjacencyList(adjacencyList.getList());
+}
+
+
+AdjacencyList Graph::createRandomWeightedConnectedGraph(int vertexNum, float edgeProbability)
+{
+    srand(time(NULL));
+    AdjacencyList result;
+    result.addVertex();
+    for(int currSize = 1; currSize < vertexNum; currSize++)
+    {
+        result.addVertex();
+        int solidEdgeDest = rand() % currSize;
+        int weight = rand() % 10 + 1;
+        result.addEdge(currSize, solidEdgeDest, weight);
+        for(int vertex = 0; vertex < currSize; vertex++)
+        {
+            double test = rand() / (double)RAND_MAX;
+            if(test < edgeProbability && vertex != solidEdgeDest && vertex != currSize)
+            {
+                weight = rand() % 10 + 1;
+                result.addEdge(currSize, vertex, weight);
+            }
+        }
+    }
+    Graph * gr = &result;
+    result = randomizeEdges((int)vertexNum/3, *gr);
+    return AdjacencyList(result.getList());
+}
+
+void Graph::dijkstraInit(const Graph& graph, const int& beginningVertex, std::vector<int>& ds, std::vector<int>& ps)
+{
+    ds.clear();
+    ps.clear();
+    AdjacencyList tmp = graph.convertToList();
+    for(int i = 0; i < tmp.getVertexAmount(); i++)
+    {
+        ds.push_back(std::numeric_limits<int>::max());
+        ps.push_back(-1);
+    }
+    ds[beginningVertex] = 0;
+}
+
+void Graph::dijkstraRelax(std::vector<int>& ds, std::vector<int>& ps, const int& firstVertex, const int& secondVertex, const int& weight)
+{
+    if(ds[secondVertex] > ds[firstVertex] + weight)
+    {
+        ds[secondVertex] = ds[firstVertex] + weight;
+        ps[secondVertex] = firstVertex;
+    }
+}
+
+std::vector<int> Graph::dijkstraAlgorithm(const Graph& graph, const int& beginningVertex, const bool& wantToDisplay)
+{
+    std::vector<int> ds;
+    std::vector<int> ps;
+    std::vector<int> s;
+    std::vector<int> result;
+    result.resize(graph.getVertexAmount());
+    Graph::dijkstraInit(graph, beginningVertex, ds, ps);
+    std::vector<std::list<Edge>> list = graph.convertToList().getList();
+    while((int)s.size() != graph.getVertexAmount())
+    {
+        int min = -1;
+        while (std::find(s.begin(), s.end(), ++min) != s.end());
+        for(int i = 0; i < (int)ds.size(); i++)
+        {
+            bool isVertexInS = std::find(s.begin(), s.end(), i) != s.end();
+            if(!isVertexInS && ds[i] < ds[min])
+                min = i;
+        }
+        s.push_back(min);
+        for(auto edge : list[min])
+        {
+            Graph::dijkstraRelax(ds, ps, min, edge.destVertex, edge.weight);
+        } 
+        result[min] = ds[min];
+    }
+    if(wantToDisplay)
+        for(int vert = 0; vert < graph.getVertexAmount(); vert++)
+        {
+            std::cout << "d(" << vert << ") = " << ds[vert] << " ==> [";   
+            int trace = vert;
+            while(ps[trace] != -1)
+            {
+                std::cout << trace << " <- ";
+                trace = ps[trace];
+            }
+            std::cout << trace << "]\n";
+        }
+    return result;
 }
