@@ -128,7 +128,7 @@ public:
     static bool findEulerCycle(AdjacencyMatrix &adjacencyMatrix);
 
     /*
-    *   Randomizuje zadaną ilość losowych krawędzi. NIE UWZGLĘDNIA WAG(wszystkie zrandomizowane krawędzie mają wagę 1)!
+    *   Randomizuje zadaną ilość losowych krawędzi. Wagi losuje.
     *   @param howMany ilość żądanych randomizacji
     *   @param graph Gra, który ma zostać poddany randomizacji
     */
@@ -183,6 +183,15 @@ public:
     */
     virtual int getVertexAmount() const = 0;
 
+    /*
+    *   Generuje spójny graf ważony
+    *   @param vertexNum rozmiar grafu do wygenerowania liczony w wierzchołkach
+    *   @param edgeProbability Szansa na wystapienie krawędzi(zawsze conajmniej jedna)
+    */
+    static AdjacencyList createRandomWeightedConnectedGraph(int vertexNum, float edgeProbability = 0.2);
+
+    static std::vector<int> dijkstraAlgorithm(const Graph& graph, const int& beginningVertex, const bool& wantToDisplay);
+
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych
@@ -199,7 +208,26 @@ private:
      * @param path tablica do przechowywania cyklu Hamiltona
      * @param pos aktualny wierzcholek
 */
-    static bool hamiltonCycle(AdjacencyMatrix &adjacencyMatrix, int path[], int pos);
+    static bool hamiltonCycle(AdjacencyMatrix& adjacencyMatrix, int path[], int pos);
+
+    /*
+    *   Inicjalizuje pierwotne wartości pomocniczych wektorów do algorytmu dijkstry
+    *   @param beginningVertex Index wierzchołka od którego zaczynamy
+    *   @param ds Pomocniczy wektor z najlepszymi do tej pory ścieżkami
+    *   @param ps Pomocniczy wektor z poprzednim elementem w ścieżce
+    *   @param graph Graf na którym pracujemy
+    */
+    static void dijkstraInit(const Graph& graph, const int& beginningVertex, std::vector<int>& ds, std::vector<int>& ps);
+
+    /*
+    *   Relaksajca krawędzi do algorytmu dijkstry
+    *   @param firstVertex Index pierwszego wierzchołka incydentnego do sprawdzanej krawędzi.
+    *   @param secondVertex Index drugiego wierzchołka incydentnego do sprawdzanej krawędzi.
+    *   @param weight Waga obecnie sprawdzanej krawędzi.
+    *   @param ds Pomocniczy wektor z najlepszymi do tej pory ścieżkami
+    *   @param ps Pomocniczy wektor z poprzednim elementem w ścieżce
+    */
+    static void dijkstraRelax(std::vector<int>& ds, std::vector<int>& ps, const int& firstVertex, const int& secondVertex, const int& weight);
 };
 
 #endif
