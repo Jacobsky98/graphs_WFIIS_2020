@@ -178,7 +178,9 @@ void project_3()
     std::cout << "Najmniejsza suma wag: " << std::endl;
     std::cout << min_sums.top().v << ": " << min_sums.top().w << std::endl;
     std::cout << "Centrum minmax: " << std::endl;
-    std::cout << minmax.top().v << ": " << minmax.top().w << std::endl<< std::endl<< std::endl;
+    std::cout << minmax.top().v << ": " << minmax.top().w << std::endl
+              << std::endl
+              << std::endl;
 }
 
 int main()
