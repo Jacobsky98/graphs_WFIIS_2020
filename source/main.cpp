@@ -54,7 +54,7 @@ void project_2() {
     // std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
     // AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
     // std::ofstream file("output.dat");
-    // Graph *graph = & djacencyList;
+    // Graph *graph = & adjacencyList;
     // graph -> printToFile(file);
 
     // zadanie 2
@@ -62,7 +62,7 @@ void project_2() {
     // std::ofstream file1("output-p2-z2-1.dat"); //Zmienić gnuplot.sh przy pokazywaniu!
     // std::ofstream file2("output-p2-z2-2.dat");
     // AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p1/adjList.txt");
-    //Graph *graph = &adjacencyList;
+    // Graph *graph = &adjacencyList;
     // graph -> printToFile(file1);
     // adjacencyList.print(std::cout);
     // std::cout << std::endl;
@@ -121,8 +121,41 @@ void project_2() {
     
 }
 
+void project_3() 
+{
+
+    // Zadanie 1
+
+    AdjacencyList adjList = Graph::createRandomWeightedConnectedGraph(10, 0.2);
+    adjList.print(std::cout);
+    Graph *gr = &adjList;
+    std::ofstream file("output.dat");
+    gr->printToFile(file);
+
+    //Zadanie 2
+
+    Graph::dijkstraAlgorithm(*gr, 0, true);
+
+    //Zadanie 3
+
+    for(int vertex = 0; vertex < gr -> getVertexAmount(); vertex++)
+    {
+        std::vector<int> result = Graph::dijkstraAlgorithm(*gr, vertex, false);
+        for(auto i: result)
+            std::cout << i <<"\t";
+        std::cout << std::endl;
+    }
+}
+
 int main()
 {
-    project_2();
+    // AdjacencyMatrix adjMat = {  0, 1, 0, 1, 0,
+    //                             1, 0, 1, 1, 0,
+    //                             0, 1, 0, 1, 0,
+    //                             1, 1, 1, 0, 0,
+    //                             0, 0, 0, 0, 0};
+    // project_1();
+    // project_2();
+    project_3();
     return 0;
 }

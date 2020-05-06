@@ -32,7 +32,7 @@ public:
     virtual Graph &addVertex() override;
     virtual Graph &addVertex(unsigned int vertices) override;
 
-    virtual Graph &addEdge(int firstVertex, int secondVertex) override;
+    virtual Graph &addEdge(int firstVertex, int secondVertex, int weight = 1) override;
     virtual Graph &removeEdge(int firstVertex, int secondVertex) override;
 
     virtual AdjacencyList convertToList() const override;
