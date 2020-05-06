@@ -8,6 +8,7 @@
 #include <vector>
 #include <list>
 #include <stack>
+#include "Edge.hpp"
 
 class AdjacencyList;
 class AdjacencyMatrix;
@@ -34,7 +35,7 @@ public:
     /**
      * Dodaje krawedz miedzy podanymi wierzcholkami.
 */
-    virtual Graph &addEdge(int firstVertex, int secondVertex) = 0;
+    virtual Graph &addEdge(int firstVertex, int secondVertex, int weight) = 0;
 
     /*
     *   Usuwa krawędź pomiędzy podanymi wierzchołkami
@@ -125,8 +126,9 @@ public:
      * @param start wierzcholek startowy
 */
     static bool findEulerCycle(AdjacencyMatrix &adjacencyMatrix);
+
     /*
-    *   Randomizuje zadaną ilość losowych krawędzi.
+    *   Randomizuje zadaną ilość losowych krawędzi. NIE UWZGLĘDNIA WAG(wszystkie zrandomizowane krawędzie mają wagę 1)!
     *   @param howMany ilość żądanych randomizacji
     *   @param graph Gra, który ma zostać poddany randomizacji
     */
@@ -143,7 +145,7 @@ public:
      * Algorytm Prima - najmniejsze drzewo rozpinajace
      * @return Najmniejsze drzewo rozpinajace
 */
-    AdjacencyList primsAlgorithm();
+    AdjacencyList primsAlgorithm() const;
 
     /**
      * Wyszukuje cykl Hamiltona w grafie, procedura startowa
@@ -189,7 +191,7 @@ private:
      * @param list lista sasiedztwa
      * @param comp tablica skladowych sciezki
 */
-    static void components_r(int nr, int i, std::vector<std::list<int>> list, int *comp);
+    static void components_r(int nr, int i, std::vector<std::list<Edge>> list, int *comp);
 
     /**
      * Wyszukuje cykl Hamiltona w grafie

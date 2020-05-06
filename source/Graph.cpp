@@ -135,7 +135,7 @@ AdjacencyList Graph::constuctGraphFromDegreeSequence(std::vector<int> &A)
 void Graph::largestComponent(AdjacencyList adjacencyList)
 {
     int nr = 0;
-    std::vector<std::list<int>> list = adjacencyList.getList();
+    std::vector<std::list<Edge>> list = adjacencyList.getList();
     int n = list.size();
     int comp[n];
     for (int i = 0; i < n; i++)
@@ -312,17 +312,17 @@ bool Graph::findEulerCycle(AdjacencyMatrix &adjacencyMatrix)
     return false;
 }
 
-void Graph::components_r(int nr, int i, std::vector<std::list<int>> list, int *comp)
+void Graph::components_r(int nr, int i, std::vector<std::list<Edge>> list, int *comp)
 {
     int n = list[i].size();
-    std::list<int>::iterator it = list[i].begin();
+    std::list<Edge>::iterator it = list[i].begin();
     for (int l = 0; l < n; l++)
     {
         // std::cout << *it << "\n";
-        if (comp[*it] == -1)
+        if (comp[(*it).destVertex] == -1)
         {
-            comp[*it] = nr;
-            Graph::components_r(nr, *it, list, comp);
+            comp[(*it).destVertex] = nr;
+            Graph::components_r(nr, (*it).destVertex, list, comp);
         }
         std::advance(it, 1);
     }
@@ -449,7 +449,7 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
         std::cout << "Nie da sie skonstruowac grafu " << k << "-regularnego o " << n << " wierzcholkach\n";
         return AdjacencyList();
     }
-    std::vector<std::list<int>> list;
+    std::vector<std::list<Edge>> list;
     list.resize(n);
     if (k == 0)
         return AdjacencyList(list);
@@ -472,7 +472,7 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
             auto tmp = adjacencyList.getList();
             for (auto k : tmp[i])
             {
-                current_edges[k] = true;
+                current_edges[k.destVertex] = true;
             }
             while (tmp[i].size() != k && it < 10)
             {
@@ -497,13 +497,41 @@ AdjacencyList Graph::generateKRegularGraph(const unsigned int n, const unsigned 
     return AdjacencyList(adjacencyList.getList());
 }
 
-AdjacencyList Graph::primsAlgorithm()
+AdjacencyList Graph::primsAlgorithm() const
 {
     AdjacencyList graph = this->convertToList();
 
-    for (auto vertex : graph.getList()) {
-        
+    AdjacencyList minimumSpanningTree;
+
+    auto graphList = graph.getList();
+    for (auto vertex : graphList)
+        minimumSpanningTree.addVertex();
+
+    auto edgesList = *graphList.begin();
+    std::vector<int> T = {0};
+
+    while (T.size() < graphList.size())
+    {
+        auto minWeight = std::min_element(edgesList.begin(), edgesList.end(),
+                                          [](const Edge &e1, const Edge &e2) {
+                                              return e1.weight < e2.weight;
+                                          });
+
+        minimumSpanningTree.addEdge(*minWeight);
+
+        auto addedVertex = (*minWeight).destVertex;
+        T.push_back(addedVertex);
+        edgesList.insert(edgesList.end(), graphList[addedVertex].begin(), graphList[addedVertex].end());
+
+        for (auto edge : graphList[addedVertex])
+        {
+            if (std::find(T.begin(), T.end(), edge.destVertex) != T.end())
+            {
+                edgesList.remove(edge);
+                edgesList.remove(Edge(edge.destVertex, edge.srcVertex, edge.weight));
+            }
+        }
     }
 
-        return graph;
+    return minimumSpanningTree;
 }

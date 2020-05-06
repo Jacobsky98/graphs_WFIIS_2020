@@ -5,19 +5,19 @@
 #include <vector>
 #include <list>
 
-
 class AdjacencyList : public Graph
 {
 public:
     AdjacencyList() = default;
 
-    AdjacencyList(std::vector<std::list<int>> const &initializer);
+    AdjacencyList(std::vector<std::list<Edge>> const &initializer);
     static AdjacencyList &loadFromFile(const std::string fileName);
 
     virtual Graph &addVertex() override;
     virtual Graph &addVertex(unsigned int vertices) override;
 
-    virtual Graph &addEdge(int firstVertex, int secondVertex) override;
+    virtual Graph &addEdge(int firstVertex, int secondVertex, int weight = 1) override;
+    Graph &addEdge(const Edge &edge);
     virtual Graph &removeEdge(int firstVertex, int secondVertex) override;
     virtual AdjacencyList convertToList() const override;
 
@@ -28,13 +28,13 @@ public:
     virtual std::ostream &printToFile(std::ostream &o) const override;
     virtual bool doesEdgeExists(int firstVertex, int secondVertex) const override;
     virtual bool isVertexIsolated(int vertex) const override;
-    virtual int dimOfVertex(int vertex)const override;
+    virtual int dimOfVertex(int vertex) const override;
     virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const override;
     virtual int getVertexAmount() const override;
-    std::vector<std::list<int>> getList() const;
+    std::vector<std::list<Edge>> getList() const;
 
 private:
-    std::vector<std::list<int>> list;
+    std::vector<std::list<Edge>> list;
 };
 
 #endif
