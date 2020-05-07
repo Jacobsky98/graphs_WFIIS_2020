@@ -186,9 +186,10 @@ void Graph::largestComponent(AdjacencyList adjacencyList)
 
 void Graph::randomEuler(unsigned int n)
 {
-    for(int i = 0; i < 1000; i++)
+    for(int i = 0; i < 10000; i++)
     {
-        double prob = (double)rand() / RAND_MAX;
+        // double prob = (double)rand() / RAND_MAX;
+        double prob = 0.4;
         AdjacencyList adjacencyList = Graph::randomByProbability(n, prob);
         
         AdjacencyMatrix adjacencyMatrix;
@@ -205,7 +206,7 @@ void Graph::randomEuler(unsigned int n)
             found_cycle = findEulerCycle(tmp);
             if(found_cycle)
                 break;
-            randomizeEdges(rand()%(n/2), adjacencyMatrix);
+            randomizeEdges(2, adjacencyMatrix);
             it++;
         }
         if(found_cycle)
@@ -223,6 +224,11 @@ bool Graph::findEulerCycle(AdjacencyMatrix& adjacencyMatrix)
 {
     std::vector<std::vector<int>> matrix = adjacencyMatrix.getMatrix();
     int n = matrix.size();
+    for(int i = 0 ; i < n; i++)
+    {
+        if(adjacencyMatrix.dimOfVertex(i)%2 != 0)
+            return false;
+    }
     if(n == 0)
         return false;
     std::vector<int> degree(n);
@@ -385,12 +391,13 @@ AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
     AdjacencyList adj = graph.convertToList();
     int firstEdge[2] = {-1, -1};
     int secondEdge[2] = {-1, -1};
-
+    int safe = 0;
     bool reRoll = true;
     for(unsigned int i = 0; i < howMany; i++)
     {
         do
         {
+            safe ++;
             reRoll = false;
             firstEdge[0] = rand() % adj.getVertexAmount();
             if(adj.isVertexIsolated(firstEdge[0]))
@@ -425,7 +432,7 @@ AdjacencyList Graph::randomizeEdges(unsigned int howMany, const Graph& graph)
                 reRoll = true;
                 continue;
             }
-        }while(reRoll);
+        }while(reRoll && safe < 10000);
 
         adj.removeEdge(firstEdge[0], firstEdge[1]);
         adj.removeEdge(secondEdge[0], secondEdge[1]);

@@ -86,20 +86,21 @@ void project_2()
 
     // zadanie 4
 
-    // AdjacencyMatrix g1(
-    // 0, 1, 1, 1, 1,
-    // 1, 0, 1, 1, 0,
-    // 1, 1, 0, 1, 0,
-    // 1, 1, 1, 0, 1,
-    // 1, 0, 0, 1, 0);
-    // g1.convertToList().print(std::cout);
-    // std::cout << std::endl;
-    // Graph *graph = &g1;
-    // std::ofstream file("output.dat");
-    // graph -> printToFile(file);
-    // g1.print(std::cout);
-    // Graph::findEulerCycle(g1);
-    // Graph::randomEuler(10);
+    AdjacencyMatrix g1(
+    0, 1, 1, 1, 1,
+    1, 0, 0, 1, 0,
+    1, 0, 0, 1, 0,
+    1, 1, 1, 0, 1,
+    1, 0, 0, 1, 0);
+    g1.convertToList().print(std::cout);
+    std::cout << std::endl;
+    Graph *graph = &g1;
+    std::ofstream file("output.dat");
+    graph -> printToFile(file);
+    g1.print(std::cout);
+    Graph::findEulerCycle(g1);
+    std::cout<<std::endl;
+    Graph::randomEuler(6);
 
     // zadanie 5
     // std::ofstream file("output.dat");
@@ -133,10 +134,12 @@ void project_3()
     Graph *gr = &adjList;
     std::ofstream file("output.dat");
     gr->printToFile(file);
+    std::cout << std::endl;
 
     //Zadanie 2
 
     Graph::dijkstraAlgorithm(*gr, 0, true);
+    std::cout << std::endl;
 
     //Zadanie 3
 
@@ -147,6 +150,7 @@ void project_3()
             std::cout << i << "\t";
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 
     //Zadanie 4
     struct ve
@@ -191,7 +195,7 @@ int main()
     //                             1, 1, 1, 0, 0,
     //                             0, 0, 0, 0, 0};
     // project_1();
-    // project_2();
-    project_3();
+    project_2();
+    // project_3();
     return 0;
 }
