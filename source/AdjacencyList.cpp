@@ -3,7 +3,8 @@
 #include <cmath>
 
 AdjacencyList::AdjacencyList(std::vector<std::list<Edge>> const &initializer) : list(initializer)
-{}
+{
+}
 
 AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
 {
@@ -12,12 +13,12 @@ AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
     adjacencyList->list.clear();
     int i = 0;
     std::string str;
-    while(getline(file, str))
+    while (getline(file, str))
     {
         adjacencyList->list.push_back(std::list<Edge>());
         std::istringstream line(str);
         int variable;
-        while(line >> variable)
+        while (line >> variable)
         {
             adjacencyList->list[i].push_back(Edge(variable, 1));
         }
@@ -40,17 +41,16 @@ Graph &AdjacencyList::addVertex(unsigned int vertices)
 
 Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex, int weight)
 {
-    auto comperator = [](const Edge & edge1, const Edge & edge2)
-    {
+    auto comperator = [](const Edge &edge1, const Edge &edge2) {
         return edge1.destVertex < edge2.destVertex;
     };
 
-    if(doesEdgeExists(firstVertex, secondVertex))
+    if (doesEdgeExists(firstVertex, secondVertex))
         return *this;
     else
     {
-        list[firstVertex].push_back(Edge(secondVertex, weight));
-        list[secondVertex].push_back(Edge(firstVertex, weight));
+        list[firstVertex].push_back(Edge(firstVertex, secondVertex, weight));
+        list[secondVertex].push_back(Edge(secondVertex, firstVertex, weight));
     }
     list[firstVertex].sort(comperator);
     list[secondVertex].sort(comperator);
@@ -58,10 +58,15 @@ Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex, int weight)
     return *this;
 }
 
+Graph &AdjacencyList::addEdge(const Edge &edge)
+{
+    return addEdge(edge.srcVertex, edge.destVertex, edge.weight);
+}
+
 Graph &AdjacencyList::removeEdge(int firstVertex, int secondVertex)
 {
-    list[firstVertex].remove(Edge(secondVertex));
-    list[secondVertex].remove(Edge(firstVertex));
+    list[firstVertex].remove(Edge(firstVertex, secondVertex));
+    list[secondVertex].remove(Edge(secondVertex, firstVertex));
     return *this;
 }
 
@@ -78,16 +83,17 @@ Graph &AdjacencyList::convertFromList(AdjacencyList const &adjacencyList)
 
 std::ostream &AdjacencyList::print(std::ostream &o) const
 {
-    for(int i = 0; i < (int)list.size(); i++)
+    for (int i = 0; i < (int)list.size(); i++)
     {
         o << i << ".\t";
-        for(auto const& node: list[i])
+        for (auto const &node : list[i])
         {
-            o << node.destVertex << " (" << node.weight << ")" << "\t";
+            o << node.destVertex << " (" << node.weight << ")"
+              << "\t";
         }
         o << "\n";
     }
-    return o;   
+    return o;
 }
 
 std::ostream &AdjacencyList::printToFile(std::ostream &o) const
@@ -100,8 +106,8 @@ std::ostream &AdjacencyList::printToFile(std::ostream &o) const
     {
         x1 = radius * cos(angle);
         y1 = radius * sin(angle);
-        
-        if(!list[i].size())
+
+        if (!list[i].size())
         {
             o << x1 << '\t' << y1 << std::endl;
             o << x1 << '\t' << y1 << std::endl;
@@ -129,9 +135,9 @@ std::vector<std::list<Edge>> AdjacencyList::getList() const
 bool AdjacencyList::doesEdgeExists(int firstVertex, int secondVertex) const
 {
     bool result = false;
-    for(auto connection:list[firstVertex])
+    for (auto connection : list[firstVertex])
     {
-        if(connection.destVertex == secondVertex)
+        if (connection.destVertex == secondVertex)
         {
             result = true;
             break;
@@ -142,7 +148,7 @@ bool AdjacencyList::doesEdgeExists(int firstVertex, int secondVertex) const
 
 bool AdjacencyList::isVertexIsolated(int vertex) const
 {
-    if(dimOfVertex(vertex) == 0)
+    if (dimOfVertex(vertex) == 0)
         return true;
     else
         return false;
@@ -156,7 +162,7 @@ int AdjacencyList::dimOfVertex(int vertex) const
 std::vector<int> AdjacencyList::getVectorOfVerticesConnectedTo(int vertex) const
 {
     std::vector<int> result;
-    for(auto ver: list[vertex])
+    for (auto ver : list[vertex])
     {
         int tmp = ver.destVertex;
         result.push_back(tmp);

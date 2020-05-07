@@ -586,3 +586,42 @@ std::vector<int> Graph::dijkstraAlgorithm(const Graph& graph, const int& beginni
         }
     return result;
 }
+
+AdjacencyList Graph::primsAlgorithm() const
+{
+    AdjacencyList graph = this->convertToList();
+
+    AdjacencyList minimumSpanningTree;
+
+    auto graphList = graph.getList();
+    for (auto vertex : graphList)
+        minimumSpanningTree.addVertex();
+
+    auto edgesList = *graphList.begin();
+    std::vector<int> T = {0};
+
+    while (T.size() < graphList.size())
+    {
+        auto minWeight = std::min_element(edgesList.begin(), edgesList.end(),
+                                          [](const Edge &e1, const Edge &e2) {
+                                              return e1.weight < e2.weight;
+                                          });
+
+        minimumSpanningTree.addEdge(*minWeight);
+
+        auto addedVertex = (*minWeight).destVertex;
+        T.push_back(addedVertex);
+        edgesList.insert(edgesList.end(), graphList[addedVertex].begin(), graphList[addedVertex].end());
+
+        for (auto edge : graphList[addedVertex])
+        {
+            if (std::find(T.begin(), T.end(), edge.destVertex) != T.end())
+            {
+                edgesList.remove(edge);
+                edgesList.remove(Edge(edge.destVertex, edge.srcVertex, edge.weight));
+            }
+        }
+    }
+
+    return minimumSpanningTree;
+}

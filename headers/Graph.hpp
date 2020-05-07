@@ -53,7 +53,7 @@ public:
 */
     virtual Graph &convertFromList(AdjacencyList const &adjacencyList) = 0;
 
-/**
+    /**
      * Wypisyje graf do strumienia w surowej postaci listy/macierzy.
      * @param o Strumien, do ktorego wpisywany jest ciag znakow.
 */
@@ -79,7 +79,7 @@ public:
 */
     static Graph &convert(Graph const &source, Graph &destination);
 
- /**
+    /**
      * Generuje graf losowy G(n,l).
      * @param n Ilosc wierzcholkow.
      * @param l Ilosc krawedzi.
@@ -87,7 +87,7 @@ public:
 */
     static AdjacencyList randomByEdges(unsigned int n, unsigned int l);
 
-     /**
+    /**
      * Generuje graf losowy G(n,p).
      * @param n Ilosc wierzcholkow.
      * @param p Prawdopodobienstwo istnienia krawedzi miedzy dowolnymi wierzcholkami od 0 do 1.
@@ -105,7 +105,7 @@ public:
      * Sprawdza czy sekwencja liczb naturalnych jest ciagiem graficznym i jezeli tak tworzy graf prosty
      * @param A sekwencja liczb naturalnych
 */
-    static AdjacencyList constuctGraphFromDegreeSequence(std::vector<int>& A);
+    static AdjacencyList constuctGraphFromDegreeSequence(std::vector<int> &A);
 
     /**
      * Znajduje najwieksza wspolna skladowa grafu
@@ -113,26 +113,26 @@ public:
 */
     static void largestComponent(AdjacencyList adjacencyList);
 
-     /**
+    /**
      * Generuje eulerowski graf losowy G(n).
      * @param n Ilosc wierzcholkow.
      * @return Wygenerowany eulerowski graf losowy.
 */
     static void randomEuler(unsigned int n);
-    
+
     /**
      * Wyznacza cykl eulera w grafie (i sprawdza czy istnieje)
      * @param adjacencyMatrix kopia macierzy sasiedztwa
      * @param start wierzcholek startowy
 */
-    static bool findEulerCycle(AdjacencyMatrix& adjacencyMatrix); 
+    static bool findEulerCycle(AdjacencyMatrix &adjacencyMatrix);
 
     /*
     *   Randomizuje zadaną ilość losowych krawędzi. Wagi losuje.
     *   @param howMany ilość żądanych randomizacji
     *   @param graph Gra, który ma zostać poddany randomizacji
     */
-    static AdjacencyList randomizeEdges(unsigned int howMany,const Graph& graph);
+    static AdjacencyList randomizeEdges(unsigned int howMany, const Graph &graph);
 
     /**
      * Generuje losowy graf k-regularny
@@ -142,10 +142,16 @@ public:
     static AdjacencyList generateKRegularGraph(unsigned int n, unsigned int k);
 
     /**
+     * Algorytm Prima - najmniejsze drzewo rozpinajace
+     * @return Najmniejsze drzewo rozpinajace
+*/
+    AdjacencyList primsAlgorithm() const;
+
+    /**
      * Wyszukuje cykl Hamiltona w grafie, procedura startowa
      * @param adjacencyMatrix graf w postaci macierzy sasiedztwa
 */
-    static bool hamiltonCycleFind(AdjacencyMatrix& adjacencyMatrix);
+    static bool hamiltonCycleFind(AdjacencyMatrix &adjacencyMatrix);
 
     /*
     *   Sprawdza czy krawędź o podanych wierzchołkach istnieje
@@ -164,7 +170,7 @@ public:
     *   Zlicza wymiar wierzchołka
     *   @param vertex Numer wierzchołka
     */
-    virtual int dimOfVertex(int vertex)const = 0;
+    virtual int dimOfVertex(int vertex) const = 0;
 
     /*
     *   Generuje wektor wierzchołków połączonych z zadanym wierzchołkiem
@@ -194,8 +200,7 @@ private:
      * @param list lista sasiedztwa
      * @param comp tablica skladowych sciezki
 */
-    static void components_r(int nr, int i, std::vector<std::list<Edge>> list, int* comp);
-
+    static void components_r(int nr, int i, std::vector<std::list<Edge>> list, int *comp);
 
     /**
      * Wyszukuje cykl Hamiltona w grafie

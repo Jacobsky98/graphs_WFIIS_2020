@@ -3,13 +3,14 @@
 class Edge
 {
 public:
-	Edge(int destVertex, int weight = 0);
+	Edge(int srcVertex, int destVertex, int weight = 0);
 	~Edge() = default;
+	int srcVertex;
 	int destVertex;
 	int weight;
-	bool operator ==(const Edge& rha)
+	bool operator==(const Edge &rha)
 	{
-		return this -> destVertex == rha.destVertex;
+		return this->destVertex == rha.destVertex;
 	}
 };
 #endif
