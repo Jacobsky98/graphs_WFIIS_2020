@@ -181,6 +181,9 @@ void project_3()
     std::cout << minmax.top().v << ": " << minmax.top().w << std::endl
               << std::endl
               << std::endl;
+
+    //zadanie 5
+    adjList.primsAlgorithm().print(std::cout);
 }
 
 int main()
