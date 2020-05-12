@@ -20,7 +20,7 @@ AdjacencyList &AdjacencyList::loadFromFile(const std::string fileName)
         int variable;
         while (line >> variable)
         {
-            adjacencyList->list[i].push_back(Edge(variable, 1));
+            adjacencyList->list[i].push_back(Edge(i, variable, 1));
         }
         i++;
     }
@@ -41,6 +41,13 @@ Graph &AdjacencyList::addVertex(unsigned int vertices)
 
 Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex, int weight)
 {
+    addDirectedEdge(firstVertex, secondVertex, weight);
+    addDirectedEdge(secondVertex, firstVertex, weight);
+    return *this;
+}
+
+Graph &AdjacencyList::addDirectedEdge(int firstVertex, int secondVertex, int weight)
+{
     auto comperator = [](const Edge &edge1, const Edge &edge2) {
         return edge1.destVertex < edge2.destVertex;
     };
@@ -50,11 +57,8 @@ Graph &AdjacencyList::addEdge(int firstVertex, int secondVertex, int weight)
     else
     {
         list[firstVertex].push_back(Edge(firstVertex, secondVertex, weight));
-        list[secondVertex].push_back(Edge(secondVertex, firstVertex, weight));
     }
     list[firstVertex].sort(comperator);
-    list[secondVertex].sort(comperator);
-
     return *this;
 }
 
@@ -67,6 +71,12 @@ Graph &AdjacencyList::removeEdge(int firstVertex, int secondVertex)
 {
     list[firstVertex].remove(Edge(firstVertex, secondVertex));
     list[secondVertex].remove(Edge(secondVertex, firstVertex));
+    return *this;
+}
+
+Graph &AdjacencyList::removeDirectedEdge(int firstVertex, int secondVertex)
+{
+    list[firstVertex].remove(Edge(firstVertex, secondVertex));
     return *this;
 }
 

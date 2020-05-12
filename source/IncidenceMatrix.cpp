@@ -56,17 +56,40 @@ Graph &IncidenceMatrix::addEdge(int firstVertex, int secondVertex, int weight)
     return *this;
 }
 
+Graph &IncidenceMatrix::addDirectedEdge(int firstVertex, int secondVertex, int weight)
+{
+    if (!doesEdgeExists(firstVertex, secondVertex))
+    {
+        for (int row = 0; row < _n; ++row)
+        {
+            if (row == firstVertex)
+                matrix[row].push_back(-1*weight);
+            else if(row == secondVertex)
+                matrix[row].push_back(weight);
+            else
+                matrix[row].push_back(0);
+        }
+    }
+    return *this;
+}
+
 Graph &IncidenceMatrix::removeEdge(int firstVertex, int secondVertex)
 {
     for (long unsigned int column = 0; column < matrix[0].size(); column++)
     {
-        if (matrix[firstVertex][column] > 0 && matrix[secondVertex][column] > 0)
+        if (matrix[firstVertex][column] != 0 && matrix[secondVertex][column] > 0)
         {
             for (int row = 0; row < _n; row++)
                 matrix[row].erase(matrix[row].begin() + column);
             break;
         }
     }
+    return *this;
+}
+
+Graph &IncidenceMatrix::removeDirectedEdge(int firstVertex, int secondVertex)
+{
+    removeEdge(firstVertex, secondVertex);
     return *this;
 }
 
@@ -80,21 +103,34 @@ AdjacencyList IncidenceMatrix::convertToList() const
     int first, second;
     for (int column = 0; column < numberOfEdges; ++column)
     {
-        first = -1;
-        second = -1;
+        first = 0;
+        second = 0;
         for (int row = 0; row < _n; ++row)
         {
-            if (matrix[row][column] > 0 && first < 0)
+            if (matrix[row][column] > 0 && first != 0)
                 first = row;
-            else if (matrix[row][column] > 0 && second < 0)
+            else if (matrix[row][column] > 0 && second != 0)
             {
                 second = row;
 
                 //zaklada ze graf jest prosty
-                list[first].push_back(Edge(first, second, matrix[row][column]));
-                list[second].push_back(Edge(second, first, matrix[row][column]));
-                list[first].sort(comperator);
-                list[second].sort(comperator);
+                if(first > 0 && second > 0)
+                {
+                    list[first].push_back(Edge(first, second, matrix[row][column]));
+                    list[second].push_back(Edge(second, first, matrix[row][column]));
+                    list[first].sort(comperator);
+                    list[second].sort(comperator);
+                }
+                else if(first < 0)
+                {
+                    list[first].push_back(Edge(first, second, matrix[row][column]));
+                    list[first].sort(comperator);
+                }
+                else
+                {
+                    list[second].push_back(Edge(second, first, matrix[row][column]));
+                    list[second].sort(comperator);
+                }
                 break;
             }
         }
@@ -113,7 +149,10 @@ Graph &IncidenceMatrix::convertFromList(AdjacencyList const &adjacencyList)
     {
         for (Edge second : list[first])
         {
-            addEdge(first, second.destVertex, second.weight);
+            if(adjacencyList.doesEdgeExists(first, second.destVertex) && adjacencyList.doesEdgeExists(second.destVertex, first))
+                addEdge(first, second.destVertex, second.weight);
+            else
+                addDirectedEdge(first, second.destVertex, second.weight);
         }
     }
     return *this;
@@ -139,7 +178,7 @@ bool IncidenceMatrix::doesEdgeExists(int firstVertex, int secondVertex) const
 {
     for (long unsigned int column = 0; column < matrix[0].size(); column++)
     {
-        if (matrix[firstVertex][column] > 0 && matrix[secondVertex][column] > 0)
+        if (matrix[firstVertex][column] != 0 && matrix[secondVertex][column] > 0)
             return true;
     }
     return false;
@@ -158,7 +197,7 @@ int IncidenceMatrix::dimOfVertex(int vertex) const
     int result = 0;
     for (long unsigned int column = 0; column < matrix[0].size(); column++)
     {
-        if (matrix[vertex][column] > 0)
+        if (matrix[vertex][column] != 0)
             result += 1;
     }
     return result;

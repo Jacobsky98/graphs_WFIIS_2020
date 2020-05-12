@@ -38,9 +38,14 @@ Graph &AdjacencyMatrix::addVertex(unsigned int vertices)
 
 Graph &AdjacencyMatrix::addEdge(int firstVertex, int secondVertex, int weight)
 {
-    matrix[firstVertex][secondVertex] = weight;
-    matrix[secondVertex][firstVertex] = weight;
+    addDirectedEdge(firstVertex, secondVertex, weight);
+    addDirectedEdge(secondVertex, firstVertex, weight);
+    return *this;
+}
 
+Graph &AdjacencyMatrix::addDirectedEdge(int firstVertex, int secondVertex, int weight)
+{
+    matrix[firstVertex][secondVertex] = weight;
     return *this;
 }
 
@@ -49,6 +54,12 @@ Graph &AdjacencyMatrix::removeEdge(int firstVertex, int secondVertex)
     matrix[firstVertex][secondVertex] = 0;
     matrix[secondVertex][firstVertex] = 0;
 
+    return *this;
+}
+
+Graph &AdjacencyMatrix::removeDirectedEdge(int firstVertex, int secondVertex)
+{
+    matrix[firstVertex][secondVertex] = 0;
     return *this;
 }
 

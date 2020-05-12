@@ -48,17 +48,17 @@ void project_2()
 {
     // zadanie 1
 
-    // std::vector<int> A1 = {3,2,1,0}; // nie
-    // AdjacencyList::constuctGraphFromDegreeSequence(A1);
-    // std::vector<int> A2 = {3,3,3,3}; // tak
-    // AdjacencyList::constuctGraphFromDegreeSequence(A2);
-    // std::vector<int> A3 = {4,4,3,1,2}; // nie
-    // AdjacencyList::constuctGraphFromDegreeSequence(A3);
-    // std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
-    // AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
-    // std::ofstream file("output.dat");
-    // Graph *graph = & adjacencyList;
-    // graph -> printToFile(file);
+    std::vector<int> A1 = {3,2,1,0}; // nie
+    AdjacencyList::constuctGraphFromDegreeSequence(A1);
+    std::vector<int> A2 = {3,3,3,3}; // tak
+    AdjacencyList::constuctGraphFromDegreeSequence(A2);
+    std::vector<int> A3 = {4,4,3,1,2}; // nie
+    AdjacencyList::constuctGraphFromDegreeSequence(A3);
+    std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
+    AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
+    std::ofstream file("output.dat");
+    Graph *graph = & adjacencyList;
+    graph -> printToFile(file);
 
     // zadanie 2
 
@@ -86,21 +86,21 @@ void project_2()
 
     // zadanie 4
 
-    AdjacencyMatrix g1(
-    0, 1, 1, 1, 1,
-    1, 0, 0, 1, 0,
-    1, 0, 0, 1, 0,
-    1, 1, 1, 0, 1,
-    1, 0, 0, 1, 0);
-    g1.convertToList().print(std::cout);
-    std::cout << std::endl;
-    Graph *graph = &g1;
-    std::ofstream file("output.dat");
-    graph -> printToFile(file);
-    g1.print(std::cout);
-    Graph::findEulerCycle(g1);
-    std::cout<<std::endl;
-    Graph::randomEuler(6);
+    // AdjacencyMatrix g1(
+    // 0, 1, 1, 1, 1,
+    // 1, 0, 0, 1, 0,
+    // 1, 0, 0, 1, 0,
+    // 1, 1, 1, 0, 1,
+    // 1, 0, 0, 1, 0);
+    // g1.convertToList().print(std::cout);
+    // std::cout << std::endl;
+    // Graph *graph = &g1;
+    // std::ofstream file("output.dat");
+    // graph -> printToFile(file);
+    // g1.print(std::cout);
+    // Graph::findEulerCycle(g1);
+    // std::cout<<std::endl;
+    // Graph::randomEuler(6);
 
     // zadanie 5
     // std::ofstream file("output.dat");
@@ -190,6 +190,8 @@ void project_3()
     adjList.primsAlgorithm().print(std::cout);
 }
 
+
+
 int main()
 {
     // AdjacencyMatrix adjMat = {  0, 1, 0, 1, 0,
@@ -198,7 +200,16 @@ int main()
     //                             1, 1, 1, 0, 0,
     //                             0, 0, 0, 0, 0};
     // project_1();
-    project_2();
+    // project_2();
     // project_3();
+    AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p4/adjList.txt");
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+    adjacencyList.addDirectedEdge(2,3,1);
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+    adjacencyList.removeDirectedEdge(1,2);
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
     return 0;
 }

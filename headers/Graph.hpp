@@ -33,6 +33,11 @@ public:
     virtual Graph &addVertex(unsigned int vertices);
 
     /**
+     * Dodaje krawedz skierowana miedzy podanymi wierzcholkami.
+    */
+    virtual Graph &addDirectedEdge(int firstVertex, int secondVertex, int weight) = 0;
+
+    /**
      * Dodaje krawedz miedzy podanymi wierzcholkami.
 */
     virtual Graph &addEdge(int firstVertex, int secondVertex, int weight) = 0;
@@ -41,6 +46,12 @@ public:
     *   Usuwa krawędź pomiędzy podanymi wierzchołkami
     */
     virtual Graph &removeEdge(int firstVertex, int secondVertex) = 0;
+
+    /*
+    *   Usuwa skierowaną krawędź pomiędzy podanymi wierzchołkami
+    */
+    virtual Graph &removeDirectedEdge(int firstVertex, int secondVertex) = 0;
+
     /**
      * Konwertuje graf do listy sasiedztwa.
      * @return Lista sasiedztwa.

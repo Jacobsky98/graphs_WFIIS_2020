@@ -16,10 +16,12 @@ public:
 
     virtual Graph &addVertex() override;
 
+    virtual Graph &addDirectedEdge(int firstVertex, int secondVertex, int weight) override;
+
     virtual Graph &addEdge(int firstVertex, int secondVertex, int weight) override;
 
     virtual Graph &removeEdge(int firstVertex, int secondVertex) override;
-    
+    virtual Graph &removeDirectedEdge(int firstVertex, int secondVertex) override;
     virtual AdjacencyList convertToList() const override;
 
     virtual Graph &convertFromList(AdjacencyList const &adjacencyList) override;
