@@ -12,6 +12,7 @@ public:
 	{
 		return this->destVertex == rha.destVertex;
 	}
+
 	void translate()
 	{
 		int tmp = srcVertex;

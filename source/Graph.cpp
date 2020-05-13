@@ -626,6 +626,27 @@ AdjacencyList Graph::primsAlgorithm() const
     return minimumSpanningTree;
 }
 
+AdjacencyList Graph::createRandomDigraph(int vertexNum, float edgeProbability)
+{
+    srand(time(NULL));
+    AdjacencyList result;
+    for(int i = 0; i < vertexNum; i++)
+        result.addVertex();
+    for(int firstIndex = 0; firstIndex < vertexNum; firstIndex++)
+    {
+        for (int secondIndex = 0; secondIndex < vertexNum; secondIndex++)
+        {
+            double test = (double)rand() / RAND_MAX;
+            if(test < edgeProbability && firstIndex != secondIndex)
+            {
+                result.addDirectedEdge(firstIndex, secondIndex, 1);
+            }
+        }
+    }
+    return result;
+
+}
+
 
 std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
 {
@@ -665,7 +686,7 @@ std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
     std::sort(f_sorted.begin(), f_sorted.end(), std::greater<int>());
     for(int i = 0; i < n; i++)
     {
-        int v = i;
+        int v = 0;
         for(; v < n; v++)
         {
             if(f[v] == f_sorted[i])
@@ -675,7 +696,7 @@ std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
     }
 
 
-    for(int i = 0; i < n; i++)
+    for(int i = n-1; i >=0; i--)
     {
         int v = f_sorted[i];
         if(comp[v] == -1)

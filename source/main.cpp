@@ -190,23 +190,61 @@ void project_3()
     adjList.primsAlgorithm().print(std::cout);
 }
 
-void project_4()
+void directedTests()
 {
-    // AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p4/adjList.txt");
-    // adjacencyList.print(std::cout);
-    // std::cout << "\n\n";
-    // adjacencyList.addDirectedEdge(2,3,1);
-    // adjacencyList.print(std::cout);
-    // std::cout << "\n\n";
-    // adjacencyList.removeDirectedEdge(1,2);
-    // adjacencyList.print(std::cout);
-    // std::cout << "\n\n";
+    Graph *graph;
 
-    // zadanie 2
-    AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p4/adjList_ad1.txt");
-    Graph::kosarajuAlgorithm(adjacencyList);
+    AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p4/adjList.txt");
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+
+    graph = &adjacencyList;
+
+    AdjacencyMatrix testAdjacencyMatrix;
+    IncidenceMatrix testIncidenceMatrix;
+
+    Graph::convert(*graph, testIncidenceMatrix);
+    Graph::convert(*graph, testAdjacencyMatrix);
+
+    testAdjacencyMatrix.print(std::cout);
+    std::cout << "\n\n";
+    testIncidenceMatrix.print(std::cout);
+    std::cout << "\n\n";
+
+    std::cout<< adjacencyList.getVertexAmount() << " " << testAdjacencyMatrix.getVertexAmount() << " " << testIncidenceMatrix.getVertexAmount() << std::endl;
+    std::cout<< adjacencyList.doesEdgeExists(0, 1) << " " << testAdjacencyMatrix.doesEdgeExists(0, 1) << " " << testIncidenceMatrix.doesEdgeExists(0, 1) << std::endl;
+    std::cout<< adjacencyList.doesEdgeExists(3, 2) << " " << testAdjacencyMatrix.doesEdgeExists(3, 2) << " " << testIncidenceMatrix.doesEdgeExists(3, 2) << std::endl;
+    std::cout<< adjacencyList.isVertexIsolated(4) << " " << testAdjacencyMatrix.isVertexIsolated(4) << " " << testIncidenceMatrix.isVertexIsolated(4) << std::endl;
+    std::cout<< adjacencyList.dimOfVertex(2) << " " << testAdjacencyMatrix.dimOfVertex(2) << " " << testIncidenceMatrix.dimOfVertex(2) << std::endl;
+    std::cout<< adjacencyList.isDirectedGraph() << " " << testAdjacencyMatrix.isDirectedGraph() << " " << testIncidenceMatrix.isDirectedGraph() << std::endl;
 }
 
+void project_4()
+{
+    // zadanie 1
+    AdjacencyList adjacencyList = Graph::createRandomDigraph(10, 0.5);
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+
+    // zadanie 2
+    AdjacencyList adjacencyList1 = AdjacencyList::loadFromFile("input/p4/adjList_ad1.txt");
+    Graph::kosarajuAlgorithm(adjacencyList1);
+    
+    AdjacencyList adjacencyList2 = AdjacencyList::loadFromFile("input/p4/adjList_ad2.txt");
+    Graph::kosarajuAlgorithm(adjacencyList2);
+    std::ofstream file("output.dat");
+    Graph *graph;
+    graph = &adjacencyList2;
+    graph->printToFile(file);
+
+    // std::cout << "Zadanie 2: losowy graf\n\n";
+    // AdjacencyList randomAdjacencyList = Graph::createRandomDigraph(7);
+    // Graph::kosarajuAlgorithm(randomAdjacencyList);
+    // std::ofstream file("output.dat");
+    // Graph *graph;
+    // graph = &randomAdjacencyList;
+    // graph->printToFile(file);
+}
 
 
 int main()
@@ -219,6 +257,8 @@ int main()
     // project_1();
     // project_2();
     // project_3();
+    // directedTests();
     project_4();
+    
     return 0;
 }

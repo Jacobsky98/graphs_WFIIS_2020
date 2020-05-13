@@ -152,8 +152,11 @@ int AdjacencyMatrix::dimOfVertex(int vertex) const
     int result = 0;
     for (int i = 0; i < getVertexAmount(); i++)
     {
-        if (matrix[vertex][i] > 0)
+        if (matrix[vertex][i] > 0)  
             result += 1;
+        if(matrix[i][vertex] > 0 && isDirectedGraph())
+            result += 1;
+
     }
     return result;
 }
@@ -170,4 +173,17 @@ std::vector<int> AdjacencyMatrix::getVectorOfVerticesConnectedTo(int vertex) con
 int AdjacencyMatrix::getVertexAmount() const
 {
     return matrix.size();
+}
+
+bool AdjacencyMatrix::isDirectedGraph() const
+{
+    for(int row = 0; row < (int)matrix.size(); row++)
+    {
+        for(int column = 0; column < (int)matrix.size(); column++)
+        {
+            if (doesEdgeExists(row,column) && !doesEdgeExists(column,row))
+                return true;
+        }
+    }
+    return false;
 }

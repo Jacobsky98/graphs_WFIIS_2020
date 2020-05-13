@@ -164,37 +164,37 @@ public:
 */
     static bool hamiltonCycleFind(AdjacencyMatrix &adjacencyMatrix);
 
-    /**
+    /*
     *   Sprawdza czy krawędź o podanych wierzchołkach istnieje
     *   @param  firstVertex numer pierwszego wierzchołka
     *   @param  secondVertex numer drugiego wierzchołka
     */
     virtual bool doesEdgeExists(int firstVertex, int secondVertex) const = 0;
 
-    /**
+    /*
     *   Sprawdza czy wierzchołek jest izolowany
     *   @param vertex Numer sprawdzanego wierzchołka
     */
     virtual bool isVertexIsolated(int vertex) const = 0;
 
-    /**
+    /*
     *   Zlicza wymiar wierzchołka
     *   @param vertex Numer wierzchołka
     */
     virtual int dimOfVertex(int vertex) const = 0;
 
-    /**
+    /*
     *   Generuje wektor wierzchołków połączonych z zadanym wierzchołkiem
     *   @param vertex Numer wierzchołka
     */
     virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const = 0;
 
-    /**
+    /*
     *   Zlicza wierzchołki
     */
     virtual int getVertexAmount() const = 0;
 
-    /**
+    /*
     *   Generuje spójny graf ważony
     *   @param vertexNum rozmiar grafu do wygenerowania liczony w wierzchołkach
     *   @param edgeProbability Szansa na wystapienie krawędzi(zawsze conajmniej jedna)
@@ -203,12 +203,15 @@ public:
 
     static std::vector<int> dijkstraAlgorithm(const Graph& graph, const int& beginningVertex, const bool& wantToDisplay);
 
+    static AdjacencyList createRandomDigraph(int vertexNum, float edgeProbability = 0.2);
+
+    virtual bool isDirectedGraph() const = 0;
+
     /**
     * Algorytm Kosaraju oznaczajacy silnie spojne skladowe w grafie skierowanym
     * @param graph wejsciowy graf
     */ 
     static std::vector<int> kosarajuAlgorithm(const Graph& graph);
-
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych
@@ -227,7 +230,7 @@ private:
 */
     static bool hamiltonCycle(AdjacencyMatrix& adjacencyMatrix, int path[], int pos);
 
-    /**
+    /*
     *   Inicjalizuje pierwotne wartości pomocniczych wektorów do algorytmu dijkstry
     *   @param beginningVertex Index wierzchołka od którego zaczynamy
     *   @param ds Pomocniczy wektor z najlepszymi do tej pory ścieżkami
@@ -236,7 +239,7 @@ private:
     */
     static void dijkstraInit(const Graph& graph, const int& beginningVertex, std::vector<int>& ds, std::vector<int>& ps);
 
-    /**
+    /*
     *   Relaksajca krawędzi do algorytmu dijkstry
     *   @param firstVertex Index pierwszego wierzchołka incydentnego do sprawdzanej krawędzi.
     *   @param secondVertex Index drugiego wierzchołka incydentnego do sprawdzanej krawędzi.
@@ -246,7 +249,7 @@ private:
     */
     static void dijkstraRelax(std::vector<int>& ds, std::vector<int>& ps, const int& firstVertex, const int& secondVertex, const int& weight);
 
-    /**
+	    /**
      * Przeszukiwanie grafu do wyznaczania silnie spojnych skladowych do algorytmu Kosaraju
      * @param v numer wierzcholka
      * @param adjacencyList lista sasiedztwa przeszukiwanego grafu
