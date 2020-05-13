@@ -57,6 +57,8 @@ public:
     std::vector<std::vector<int>> getMatrix() const;
 
     void setValue(int x, int y, int value);
+
+    virtual bool isDirectedGraph() const override;
     
 private:
     std::vector<std::vector<int>> matrix;

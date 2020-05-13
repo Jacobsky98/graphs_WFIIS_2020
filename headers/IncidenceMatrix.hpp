@@ -39,6 +39,8 @@ public:
     virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const override;
     
     virtual int getVertexAmount() const override;
+
+    virtual bool isDirectedGraph() const override;
 private:
     std::vector<std::vector<int>> matrix;
 

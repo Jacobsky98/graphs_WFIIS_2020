@@ -625,3 +625,24 @@ AdjacencyList Graph::primsAlgorithm() const
 
     return minimumSpanningTree;
 }
+
+AdjacencyList Graph::createRandomDigraph(int vertexNum, float edgeProbability)
+{
+    srand(time(NULL));
+    AdjacencyList result;
+    for(int i = 0; i < vertexNum; i++)
+        result.addVertex();
+    for(int firstIndex = 0; firstIndex < vertexNum; firstIndex++)
+    {
+        for (int secondIndex = 0; secondIndex < vertexNum; secondIndex++)
+        {
+            double test = (double)rand() / RAND_MAX;
+            if(test < edgeProbability && firstIndex != secondIndex)
+            {
+                result.addDirectedEdge(firstIndex, secondIndex, 1);
+            }
+        }
+    }
+    return result;
+
+}

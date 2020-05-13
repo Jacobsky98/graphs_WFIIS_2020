@@ -203,6 +203,9 @@ public:
 
     static std::vector<int> dijkstraAlgorithm(const Graph& graph, const int& beginningVertex, const bool& wantToDisplay);
 
+    static AdjacencyList createRandomDigraph(int vertexNum, float edgeProbability = 0.2);
+
+    virtual bool isDirectedGraph() const = 0;
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych

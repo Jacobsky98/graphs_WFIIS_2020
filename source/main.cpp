@@ -190,6 +190,41 @@ void project_3()
     adjList.primsAlgorithm().print(std::cout);
 }
 
+void directedTests()
+{
+    Graph *graph;
+
+    AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p4/adjList.txt");
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+
+    graph = &adjacencyList;
+
+    AdjacencyMatrix testAdjacencyMatrix;
+    IncidenceMatrix testIncidenceMatrix;
+
+    Graph::convert(*graph, testIncidenceMatrix);
+    Graph::convert(*graph, testAdjacencyMatrix);
+
+    testAdjacencyMatrix.print(std::cout);
+    std::cout << "\n\n";
+    testIncidenceMatrix.print(std::cout);
+    std::cout << "\n\n";
+
+    std::cout<< adjacencyList.getVertexAmount() << " " << testAdjacencyMatrix.getVertexAmount() << " " << testIncidenceMatrix.getVertexAmount() << std::endl;
+    std::cout<< adjacencyList.doesEdgeExists(0, 1) << " " << testAdjacencyMatrix.doesEdgeExists(0, 1) << " " << testIncidenceMatrix.doesEdgeExists(0, 1) << std::endl;
+    std::cout<< adjacencyList.doesEdgeExists(3, 2) << " " << testAdjacencyMatrix.doesEdgeExists(3, 2) << " " << testIncidenceMatrix.doesEdgeExists(3, 2) << std::endl;
+    std::cout<< adjacencyList.isVertexIsolated(4) << " " << testAdjacencyMatrix.isVertexIsolated(4) << " " << testIncidenceMatrix.isVertexIsolated(4) << std::endl;
+    std::cout<< adjacencyList.dimOfVertex(2) << " " << testAdjacencyMatrix.dimOfVertex(2) << " " << testIncidenceMatrix.dimOfVertex(2) << std::endl;
+    std::cout<< adjacencyList.isDirectedGraph() << " " << testAdjacencyMatrix.isDirectedGraph() << " " << testIncidenceMatrix.isDirectedGraph() << std::endl;
+}
+
+void project_4()
+{
+    AdjacencyList adjacencyList = Graph::createRandomDigraph(10, 0.5);
+    adjacencyList.print(std::cout);
+    std::cout << "\n\n";
+}
 
 
 int main()
@@ -202,14 +237,8 @@ int main()
     // project_1();
     // project_2();
     // project_3();
-    AdjacencyList adjacencyList = AdjacencyList::loadFromFile("input/p4/adjList.txt");
-    adjacencyList.print(std::cout);
-    std::cout << "\n\n";
-    adjacencyList.addDirectedEdge(2,3,1);
-    adjacencyList.print(std::cout);
-    std::cout << "\n\n";
-    adjacencyList.removeDirectedEdge(1,2);
-    adjacencyList.print(std::cout);
-    std::cout << "\n\n";
+    // directedTests();
+    project_4();
+    
     return 0;
 }

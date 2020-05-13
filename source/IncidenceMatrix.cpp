@@ -149,10 +149,10 @@ Graph &IncidenceMatrix::convertFromList(AdjacencyList const &adjacencyList)
     {
         for (Edge second : list[first])
         {
-            if(adjacencyList.doesEdgeExists(first, second.destVertex) && adjacencyList.doesEdgeExists(second.destVertex, first))
-                addEdge(first, second.destVertex, second.weight);
-            else
+            if(adjacencyList.isDirectedGraph())
                 addDirectedEdge(first, second.destVertex, second.weight);
+            else
+                addEdge(first, second.destVertex, second.weight);
         }
     }
     return *this;
@@ -217,4 +217,17 @@ std::vector<int> IncidenceMatrix::getVectorOfVerticesConnectedTo(int vertex) con
 int IncidenceMatrix::getVertexAmount() const
 {
     return _n;
+}
+
+bool IncidenceMatrix::isDirectedGraph() const
+{
+    for(int column = 0; column < (int)matrix[0].size(); column++)
+    {
+        for(int row = 0; row < _n; row ++)
+        {
+            if(matrix[row][column] < 0)
+                return true;
+        }
+    }
+    return false;
 }
