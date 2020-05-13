@@ -4,6 +4,8 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
+#include <cstdlib>
+#include <ctime>
 
 #include <queue>
 
@@ -48,17 +50,17 @@ void project_2()
 {
     // zadanie 1
 
-    std::vector<int> A1 = {3,2,1,0}; // nie
+    std::vector<int> A1 = {3, 2, 1, 0}; // nie
     AdjacencyList::constuctGraphFromDegreeSequence(A1);
-    std::vector<int> A2 = {3,3,3,3}; // tak
+    std::vector<int> A2 = {3, 3, 3, 3}; // tak
     AdjacencyList::constuctGraphFromDegreeSequence(A2);
-    std::vector<int> A3 = {4,4,3,1,2}; // nie
+    std::vector<int> A3 = {4, 4, 3, 1, 2}; // nie
     AdjacencyList::constuctGraphFromDegreeSequence(A3);
-    std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
+    std::vector<int> A4 = {4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2}; // tak
     AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
     std::ofstream file("output.dat");
-    Graph *graph = & adjacencyList;
-    graph -> printToFile(file);
+    Graph *graph = &adjacencyList;
+    graph->printToFile(file);
 
     // zadanie 2
 
@@ -211,12 +213,12 @@ void directedTests()
     testIncidenceMatrix.print(std::cout);
     std::cout << "\n\n";
 
-    std::cout<< adjacencyList.getVertexAmount() << " " << testAdjacencyMatrix.getVertexAmount() << " " << testIncidenceMatrix.getVertexAmount() << std::endl;
-    std::cout<< adjacencyList.doesEdgeExists(0, 1) << " " << testAdjacencyMatrix.doesEdgeExists(0, 1) << " " << testIncidenceMatrix.doesEdgeExists(0, 1) << std::endl;
-    std::cout<< adjacencyList.doesEdgeExists(3, 2) << " " << testAdjacencyMatrix.doesEdgeExists(3, 2) << " " << testIncidenceMatrix.doesEdgeExists(3, 2) << std::endl;
-    std::cout<< adjacencyList.isVertexIsolated(4) << " " << testAdjacencyMatrix.isVertexIsolated(4) << " " << testIncidenceMatrix.isVertexIsolated(4) << std::endl;
-    std::cout<< adjacencyList.dimOfVertex(2) << " " << testAdjacencyMatrix.dimOfVertex(2) << " " << testIncidenceMatrix.dimOfVertex(2) << std::endl;
-    std::cout<< adjacencyList.isDirectedGraph() << " " << testAdjacencyMatrix.isDirectedGraph() << " " << testIncidenceMatrix.isDirectedGraph() << std::endl;
+    std::cout << adjacencyList.getVertexAmount() << " " << testAdjacencyMatrix.getVertexAmount() << " " << testIncidenceMatrix.getVertexAmount() << std::endl;
+    std::cout << adjacencyList.doesEdgeExists(0, 1) << " " << testAdjacencyMatrix.doesEdgeExists(0, 1) << " " << testIncidenceMatrix.doesEdgeExists(0, 1) << std::endl;
+    std::cout << adjacencyList.doesEdgeExists(3, 2) << " " << testAdjacencyMatrix.doesEdgeExists(3, 2) << " " << testIncidenceMatrix.doesEdgeExists(3, 2) << std::endl;
+    std::cout << adjacencyList.isVertexIsolated(4) << " " << testAdjacencyMatrix.isVertexIsolated(4) << " " << testIncidenceMatrix.isVertexIsolated(4) << std::endl;
+    std::cout << adjacencyList.dimOfVertex(2) << " " << testAdjacencyMatrix.dimOfVertex(2) << " " << testIncidenceMatrix.dimOfVertex(2) << std::endl;
+    std::cout << adjacencyList.isDirectedGraph() << " " << testAdjacencyMatrix.isDirectedGraph() << " " << testIncidenceMatrix.isDirectedGraph() << std::endl;
 }
 
 void project_4()
@@ -237,11 +239,29 @@ void project_4()
     Graph *graph;
     graph = &randomAdjacencyList;
     graph->printToFile(file);
-}
 
+    // zadanie 3
+    std::cout << "\nZadanie 3: Bellman-Ford Algorytm\n\n";
+    std::vector<int> result;
+    AdjacencyList coherentGraph;
+    while (true)
+    {
+        coherentGraph = Graph::createRandomDigraph(5, 0.3, 5, 10);
+        if (Graph::kosarajuAlgorithm(coherentGraph, false))
+            break;
+    }
+    Graph::kosarajuAlgorithm(coherentGraph);
+
+    std::cout << std::endl;
+    if (!Graph::bellmanFordAlgorithm(coherentGraph, 0, result, true))
+    {
+        std::cout << "W grafie jest cykl ujemny" << std::endl;
+    }
+}
 
 int main()
 {
+    srand(time(NULL));
     // AdjacencyMatrix adjMat = {  0, 1, 0, 1, 0,
     //                             1, 0, 1, 1, 0,
     //                             0, 1, 0, 1, 0,
@@ -252,6 +272,6 @@ int main()
     // project_3();
     // directedTests();
     project_4();
-    
+
     return 0;
 }
