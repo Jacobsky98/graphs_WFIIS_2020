@@ -206,6 +206,12 @@ public:
     static AdjacencyList createRandomDigraph(int vertexNum, float edgeProbability = 0.2);
 
     virtual bool isDirectedGraph() const = 0;
+
+    /**
+    * Algorytm Kosaraju oznaczajacy silnie spojne skladowe w grafie skierowanym
+    * @param graph wejsciowy graf
+    */ 
+    static std::vector<int> kosarajuAlgorithm(const Graph& graph);
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych
@@ -242,6 +248,25 @@ private:
     *   @param ps Pomocniczy wektor z poprzednim elementem w ścieżce
     */
     static void dijkstraRelax(std::vector<int>& ds, std::vector<int>& ps, const int& firstVertex, const int& secondVertex, const int& weight);
+
+	    /**
+     * Przeszukiwanie grafu do wyznaczania silnie spojnych skladowych do algorytmu Kosaraju
+     * @param v numer wierzcholka
+     * @param adjacencyList lista sasiedztwa przeszukiwanego grafu
+     * @param d wektor przechowujacy czas od poczatku dzialania algorytmu do odwiedzenia wierzcholka
+     * @param f wektor przechowujacy czas przetworzenia wierzcholka v
+     * @param t aktualny czas od poczatku trwania algorytmu
+     */ 
+    static void kosarajuDFS_visit(int v, AdjacencyList& adjacencyList, std::vector<int>& d, std::vector<int>& f, int& t);
+
+    /**
+     * Przypisywanie silnie spojnych skladowych do algorytmu Kosaraju
+     * @param nr numer silnie spojnej skladowej
+     * @param v numer wierzcholka
+     * @param adjacencyListT lista sasiedztwa transponowana
+     * @param comp wektor przechowujacy numer silnie spojnych skladowych dla danych wierzcholkow
+     */ 
+    static void kosarajuComponents_r(int& nr, int& v, AdjacencyList& adjacencyListT, std::vector<int>& comp);
 };
 
 #endif

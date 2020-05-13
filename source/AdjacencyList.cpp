@@ -211,3 +211,10 @@ bool AdjacencyList::isDirectedGraph() const
     }
     return false;
 }
+
+void AdjacencyList::translate()
+{
+    for(unsigned int i = 0; i < list.size(); i++)
+        for(Edge& edge : list[i])
+            edge.translate();
+}

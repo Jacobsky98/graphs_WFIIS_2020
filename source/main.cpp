@@ -224,6 +224,12 @@ void project_4()
     AdjacencyList adjacencyList = Graph::createRandomDigraph(10, 0.5);
     adjacencyList.print(std::cout);
     std::cout << "\n\n";
+
+        // zadanie 2
+    AdjacencyList adjacencyList2 = AdjacencyList::loadFromFile("input/p4/adjList_ad1.txt");
+    Graph::kosarajuAlgorithm(adjacencyList2);
+    std::cout << "Zadanie 2: losowy graf\n\n";
+    Graph::kosarajuAlgorithm(adjacencyList);
 }
 
 

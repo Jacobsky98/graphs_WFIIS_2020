@@ -36,6 +36,8 @@ public:
     std::vector<std::list<Edge>> getList() const;
     virtual bool isDirectedGraph() const override;
 
+	void translate();
+
 private:
     std::vector<std::list<Edge>> list;
 };
