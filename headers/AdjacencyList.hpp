@@ -34,7 +34,8 @@ public:
     virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const override;
     virtual int getVertexAmount() const override;
     std::vector<std::list<Edge>> getList() const;
-    virtual bool isDirectedGraph() const override;
+
+    void translate();
 
 private:
     std::vector<std::list<Edge>> list;

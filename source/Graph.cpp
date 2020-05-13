@@ -626,23 +626,114 @@ AdjacencyList Graph::primsAlgorithm() const
     return minimumSpanningTree;
 }
 
-AdjacencyList Graph::createRandomDigraph(int vertexNum, float edgeProbability)
+
+std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
 {
-    srand(time(NULL));
-    AdjacencyList result;
-    for(int i = 0; i < vertexNum; i++)
-        result.addVertex();
-    for(int firstIndex = 0; firstIndex < vertexNum; firstIndex++)
+    AdjacencyList adjacencyList = graph.convertToList();
+    int n = adjacencyList.getList().size();
+    std::vector<int>  d(n);
+    std::vector<int> f(n);
+    for(int i = 0; i < n; i++)
     {
-        for (int secondIndex = 0; secondIndex < vertexNum; secondIndex++)
+        d[i] = f[i] = -1;
+    }
+    int t = 0;
+
+    for(int v = 0; v < n; v++)
+    {
+        if(d[v] == -1)
         {
-            double test = (double)rand() / RAND_MAX;
-            if(test < edgeProbability && firstIndex != secondIndex)
-            {
-                result.addDirectedEdge(firstIndex, secondIndex, 1);
-            }
+            kosarajuDFS_visit(v, adjacencyList, d, f, t);
         }
     }
-    return result;
 
+    AdjacencyList adjacencyListT = graph.convertToList();
+    adjacencyListT.translate();
+    
+    
+    int nr = 0;
+    std::vector<int> comp(n);
+    for(int i = 0; i < n; i++)
+    {
+        comp[i] = -1;
+    }
+    std::vector<int> f_sorted(n);
+    for(int i = 0; i < n; i++)
+    {
+        f_sorted[i] = f[i];
+    }
+    std::sort(f_sorted.begin(), f_sorted.end(), std::greater<int>());
+    for(int i = 0; i < n; i++)
+    {
+        int v = i;
+        for(; v < n; v++)
+        {
+            if(f[v] == f_sorted[i])
+                break;
+        }
+        f_sorted[i] = v;
+    }
+
+
+    for(int i = 0; i < n; i++)
+    {
+        int v = f_sorted[i];
+        if(comp[v] == -1)
+        {
+            nr += 1;
+            comp[v] = nr;
+            kosarajuComponents_r(nr, v, adjacencyListT, comp);
+        }
+    }
+
+    std::cout << "Graf:\n";
+    adjacencyList.print(std::cout);
+    std::cout << "\nSilnie spojne skladowe:\n";
+    while(nr > 0)
+    {
+        std::cout << nr << ": ";
+        for(int i = 0; i < n; i++)
+        {
+            if(comp[i] == nr)
+                std::cout << i << " ";
+        }
+        std::cout << "\n";
+        nr--;
+    }
+    return comp;
 }
+
+
+
+void Graph::kosarajuDFS_visit(int v, AdjacencyList& adjacencyList, std::vector<int>& d, std::vector<int>& f, int& t)
+{
+    t += 1;
+    d[v] = t;
+    std::list<Edge> edge = adjacencyList.getList()[v];
+    for(Edge ed : edge)
+    {
+        int u = ed.destVertex;
+        if(d[u] == -1)
+        {
+            kosarajuDFS_visit(u, adjacencyList, d, f, t);
+        }
+    }
+
+    t += 1;
+    f[v] = t;
+}
+
+void Graph::kosarajuComponents_r(int& nr, int& v, AdjacencyList& adjacencyListT, std::vector<int>& comp)
+{
+    std::list<Edge> edge = adjacencyListT.getList()[v];
+    for(Edge ed : edge)
+    {
+        int u = ed.srcVertex;
+        if(comp[u] == -1)
+        {
+            comp[u] = nr;
+            kosarajuComponents_r(nr, u, adjacencyListT, comp);
+        }
+    }
+}
+

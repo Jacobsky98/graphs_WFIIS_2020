@@ -166,21 +166,7 @@ bool AdjacencyList::isVertexIsolated(int vertex) const
 
 int AdjacencyList::dimOfVertex(int vertex) const
 {
-    if(isDirectedGraph())
-    {
-        int result = 0;
-        for (int i = 0; i < (int)list.size(); i++)
-        {
-            for (Edge edge : list[i])
-            {
-                if(i == vertex || edge.destVertex == vertex)
-                    result++;
-            }
-        }
-        return result;
-    }
-    else
-        return list[vertex].size();
+    return list[vertex].size();
 }
 
 std::vector<int> AdjacencyList::getVectorOfVerticesConnectedTo(int vertex) const
@@ -199,15 +185,9 @@ int AdjacencyList::getVertexAmount() const
     return list.size();
 }
 
-bool AdjacencyList::isDirectedGraph() const
+void AdjacencyList::translate()
 {
-    for (int i = 0; i < (int)list.size(); i++)
-    {
-        for (Edge edge : list[i])
-        {
-            if(doesEdgeExists(i, edge.destVertex) && !doesEdgeExists(edge.destVertex, i))
-                return true;
-        }
-    }
-    return false;
+    for(unsigned int i = 0; i < list.size(); i++)
+        for(Edge& edge : list[i])
+            edge.translate();
 }
