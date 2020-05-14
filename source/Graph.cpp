@@ -656,7 +656,8 @@ std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
     std::vector<int> f(n);
     for(int i = 0; i < n; i++)
     {
-        d[i] = f[i] = -1;
+        d[i] = -1;
+        f[i] = -1;
     }
     int t = 0;
 
@@ -686,7 +687,7 @@ std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
     std::sort(f_sorted.begin(), f_sorted.end(), std::greater<int>());
     for(int i = 0; i < n; i++)
     {
-        int v = i;
+        int v = 0;
         for(; v < n; v++)
         {
             if(f[v] == f_sorted[i])
@@ -695,10 +696,12 @@ std::vector<int> Graph::kosarajuAlgorithm(const Graph& graph)
         f_sorted[i] = v;
     }
 
-
     for(int i = 0; i < n; i++)
-    {
+    // for(int i = n-1; i >=0; i--)
+    {       
+        // int v = f[i];
         int v = f_sorted[i];
+
         if(comp[v] == -1)
         {
             nr += 1;
@@ -749,9 +752,10 @@ void Graph::kosarajuComponents_r(int& nr, int& v, AdjacencyList& adjacencyListT,
     std::list<Edge> edge = adjacencyListT.getList()[v];
     for(Edge ed : edge)
     {
-        int u = ed.srcVertex;
+        int u = ed.destVertex;
         if(comp[u] == -1)
         {
+
             comp[u] = nr;
             kosarajuComponents_r(nr, u, adjacencyListT, comp);
         }
