@@ -215,6 +215,19 @@ public:
     */
     static std::vector<int> kosarajuAlgorithm(const Graph &graph, bool display = true, bool *isCoherent = nullptr);
 
+    /**
+    * funkcja pomocnicza dla johnsonAlgorithm
+    * @param graph zmieniany graph
+    */
+    static void add_s(Graph &graph);
+
+    /**
+    * Algorym johnsona odległości w grafie skierowanym
+    * @param graph wejsciowy graf
+    * @param display pokazuje wynik
+    */
+    static std::vector<int> johnsonAlgorithm(Graph &graph, bool display = true);
+
 private:
     /**
      * Przeszukuje graf w poszukiwaniu skladowych

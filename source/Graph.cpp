@@ -844,3 +844,73 @@ void Graph::kosarajuComponents_r(int &nr, int &v, AdjacencyList &adjacencyListT,
         }
     }
 }
+
+
+std::vector<int> Graph::johnsonAlgorithm(Graph &graph, bool display)
+{
+    int n = graph.getVertexAmount();//ilosc wierzcholkow
+    std::vector<int> d; //distances from bellmanFordAlgorithm
+    std::vector<int> D; //is accualy 2d
+    D.resize((n+1)*(n+1));
+    Graph::add_s(graph); //chnages graph rather them making new
+    std::vector<std::list<Edge>> list = graph.convertToList().getList();
+    // AdjacencyList(list).print(std::cout);
+    std::vector<int> dres;
+    if (Graph::bellmanFordAlgorithm(graph, n, d, 0) == 0)
+    {
+        std::cout << "UJEMY CYKL algorytm nie zadział";
+        return D;
+    }
+    else
+    {
+        //transformacja do grafu w wagami nie ujemnymi
+        std::vector<int> change={};
+        change.resize((n+1)*(n+1));
+        for (auto &v : list)
+        {
+            for (auto &edge : v)
+            {
+                edge.weight += d[edge.srcVertex] - d[edge.destVertex];
+                change[edge.srcVertex*n+edge.destVertex]=d[edge.srcVertex] - d[edge.destVertex];
+            }
+        }
+
+        AdjacencyList prepared_graph = AdjacencyList(list);
+        prepared_graph.removeVertex(n);
+        // prepared_graph.print(std::cout);
+        for (int vertex = 0; vertex < n; vertex++)
+        {
+            dres = Graph::dijkstraAlgorithm(prepared_graph, vertex, 0);
+            for (int i = 0; i < n; i++)
+            {
+                D[vertex * n + i] = dres[i] - change[vertex * n + i];
+            }
+        }
+    }
+
+    if (display)
+    {
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                std::cout << D[i * n + j] << " ";
+            }
+            std::cout << "\n";
+        }
+    }
+
+    return D;
+}
+
+void Graph::add_s(Graph &graph)
+{
+
+    graph.addVertex(1);
+
+    for (int vertex = 0; vertex < graph.getVertexAmount() - 1; vertex++)
+    {
+        graph.addDirectedEdge(graph.getVertexAmount() - 1,vertex, 0);
+    }
+}
