@@ -254,7 +254,7 @@ void project_4()
     bool isCoherent = false;
     while (true)
     {
-        coherentGraph = Graph::createRandomDigraph(5, 0.3, -1, 10);
+        coherentGraph = Graph::createRandomDigraph(5, 0.3, -5, 10);
         Graph::kosarajuAlgorithm(coherentGraph, false, &isCoherent);
         if (isCoherent)
             break;

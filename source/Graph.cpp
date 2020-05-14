@@ -849,19 +849,13 @@ void Graph::kosarajuComponents_r(int &nr, int &v, AdjacencyList &adjacencyListT,
 std::vector<int> Graph::johnsonAlgorithm(Graph &graph, bool display)
 {
     int n = graph.getVertexAmount();//ilosc wierzcholkow
-    std::cout<<n<<"\n";
     std::vector<int> d; //distances from bellmanFordAlgorithm
-    // std::vector<int> ds;
     std::vector<int> D; //is accualy 2d
-    D.resize(n * n);
-    //Graph *copy = &graph.convertToList();
+    D.resize((n+1)*(n+1));
     Graph::add_s(graph); //chnages graph rather them making new
     std::vector<std::list<Edge>> list = graph.convertToList().getList();
     // AdjacencyList(list).print(std::cout);
-    // std::cout << "\n";
-    //ok
     std::vector<int> dres;
-   // if (Graph::bellmanFordAlgorithm(graph, graph.getVertexAmount() - 1, d, 0) == 0)
     if (Graph::bellmanFordAlgorithm(graph, n, d, 0) == 0)
     {
         std::cout << "UJEMY CYKL algorytm nie zadział";
@@ -871,36 +865,25 @@ std::vector<int> Graph::johnsonAlgorithm(Graph &graph, bool display)
     {
         //transformacja do grafu w wagami nie ujemnymi
         std::vector<int> change={};
-        change.resize(n*n);
+        change.resize((n+1)*(n+1));
         for (auto &v : list)
         {
             for (auto &edge : v)
             {
                 edge.weight += d[edge.srcVertex] - d[edge.destVertex];
-               // std::cout << d[edge.srcVertex] << d[edge.destVertex]<<"\n";//results from bellmalFord are bad
-
-                // change.push_back(d[edge.srcVertex] - d[edge.destVertex]);
                 change[edge.srcVertex*n+edge.destVertex]=d[edge.srcVertex] - d[edge.destVertex];
             }
         }
-        // std::cout << "\n\n ";
-
-        // for (auto &&i : change)
-        // {
-        //     std::cout << i << "  ";
-        // }
-        // std::cout << "\n\n ";
 
         AdjacencyList prepared_graph = AdjacencyList(list);
         prepared_graph.removeVertex(n);
-        prepared_graph.print(std::cout);
+        // prepared_graph.print(std::cout);
         for (int vertex = 0; vertex < n; vertex++)
         {
             dres = Graph::dijkstraAlgorithm(prepared_graph, vertex, 0);
             for (int i = 0; i < n; i++)
             {
                 D[vertex * n + i] = dres[i] - change[vertex * n + i];
-                // std::cout<<dres[i]<<" "<< change[vertex * n + i]<<"\n";
             }
         }
     }
@@ -928,6 +911,6 @@ void Graph::add_s(Graph &graph)
 
     for (int vertex = 0; vertex < graph.getVertexAmount() - 1; vertex++)
     {
-        graph.addEdge(vertex, graph.getVertexAmount() - 1, 0);
+        graph.addDirectedEdge(graph.getVertexAmount() - 1,vertex, 0);
     }
 }
