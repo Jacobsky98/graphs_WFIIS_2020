@@ -246,7 +246,7 @@ void project_4()
     AdjacencyList coherentGraph;
     while (true)
     {
-        coherentGraph = Graph::createRandomDigraph(5, 0.3, 5, 10);
+        coherentGraph = Graph::createRandomDigraph(5, 0.3, -5, 10);
         if (Graph::kosarajuAlgorithm(coherentGraph, false))
             break;
     }

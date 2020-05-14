@@ -703,7 +703,7 @@ AdjacencyList Graph::createRandomDigraph(int vertexNum, float edgeProbability, i
             int weight = 0;
             while (!weight)
             {
-                weight = rand() % max + min;
+                weight = rand() % (max - min + 1) + min;
             }
             if (test < edgeProbability && firstIndex != secondIndex)
             {
@@ -751,7 +751,7 @@ bool Graph::kosarajuAlgorithm(const Graph &graph, bool display)
     std::sort(f_sorted.begin(), f_sorted.end(), std::greater<int>());
     for (int i = 0; i < n; i++)
     {
-        int v = i;
+        int v = 0;
         for (; v < n; v++)
         {
             if (f[v] == f_sorted[i])
@@ -831,8 +831,11 @@ void Graph::kosarajuComponents_r(int &nr, int &v, AdjacencyList &adjacencyListT,
         int u = ed.srcVertex;
         if (comp[u] == -1)
         {
-            comp[u] = nr;
-            kosarajuComponents_r(nr, u, adjacencyListT, comp);
+            if (adjacencyListT.getList()[u].size() > 0)
+            {
+                comp[u] = nr;
+                kosarajuComponents_r(nr, u, adjacencyListT, comp);
+            }
         }
     }
 }
