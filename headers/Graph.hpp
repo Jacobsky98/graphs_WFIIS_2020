@@ -213,7 +213,7 @@ public:
     * Algorytm Kosaraju oznaczajacy silnie spojne skladowe w grafie skierowanym
     * @param graph wejsciowy graf
     */
-    static bool kosarajuAlgorithm(const Graph &graph, bool display = true);
+    static std::vector<int> kosarajuAlgorithm(const Graph &graph, bool display = true, bool *isCoherent = nullptr);
 
 private:
     /**

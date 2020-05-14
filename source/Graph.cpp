@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <algorithm>
+#define INF 214748364
 
 std::ostream &operator<<(std::ostream &o, Graph const *graph)
 {
@@ -609,7 +610,7 @@ bool Graph::bellmanFordAlgorithm(const Graph &graph, const int &beginningVertex,
 
     for (int i = 0; i < vertexAmount; i++)
     {
-        d.push_back(std::numeric_limits<int>::max());
+        d.push_back(INF);
         p.push_back(-1);
     }
     d[beginningVertex] = 0;
@@ -714,7 +715,7 @@ AdjacencyList Graph::createRandomDigraph(int vertexNum, float edgeProbability, i
     return result;
 }
 
-bool Graph::kosarajuAlgorithm(const Graph &graph, bool display)
+std::vector<int> Graph::kosarajuAlgorithm(const Graph &graph, bool display, bool *isCoherent)
 {
     AdjacencyList adjacencyList = graph.convertToList();
     int n = adjacencyList.getList().size();
@@ -722,7 +723,8 @@ bool Graph::kosarajuAlgorithm(const Graph &graph, bool display)
     std::vector<int> f(n);
     for (int i = 0; i < n; i++)
     {
-        d[i] = f[i] = -1;
+        d[i] = -1;
+        f[i] = -1;
     }
     int t = 0;
 
@@ -761,8 +763,11 @@ bool Graph::kosarajuAlgorithm(const Graph &graph, bool display)
     }
 
     for (int i = 0; i < n; i++)
+    // for(int i = n-1; i >=0; i--)
     {
+        // int v = f[i];
         int v = f_sorted[i];
+
         if (comp[v] == -1)
         {
             nr += 1;
@@ -771,19 +776,21 @@ bool Graph::kosarajuAlgorithm(const Graph &graph, bool display)
         }
     }
 
-    bool isCoherent = false;
-    if (nr == 1)
+    if (isCoherent != nullptr)
     {
-        int count = 0;
-        for (int i = 0; i < n; i++)
+        *isCoherent = false;
+        if (nr == 1)
         {
-            if (comp[i] == nr)
-                count++;
+            int count = 0;
+            for (int i = 0; i < n; i++)
+            {
+                if (comp[i] == nr)
+                    count++;
+            }
+            if (count == n)
+                *isCoherent = true;
         }
-        if (count == n)
-            isCoherent = true;
     }
-
     if (display)
     {
         std::cout << "Graf:\n";
@@ -802,7 +809,7 @@ bool Graph::kosarajuAlgorithm(const Graph &graph, bool display)
             nr--;
         }
     }
-    return isCoherent;
+    return comp;
 }
 
 void Graph::kosarajuDFS_visit(int v, AdjacencyList &adjacencyList, std::vector<int> &d, std::vector<int> &f, int &t)
@@ -828,14 +835,12 @@ void Graph::kosarajuComponents_r(int &nr, int &v, AdjacencyList &adjacencyListT,
     std::list<Edge> edge = adjacencyListT.getList()[v];
     for (Edge ed : edge)
     {
-        int u = ed.srcVertex;
+        int u = ed.destVertex;
         if (comp[u] == -1)
         {
-            if (adjacencyListT.getList()[u].size() > 0)
-            {
-                comp[u] = nr;
-                kosarajuComponents_r(nr, u, adjacencyListT, comp);
-            }
+
+            comp[u] = nr;
+            kosarajuComponents_r(nr, u, adjacencyListT, comp);
         }
     }
 }
