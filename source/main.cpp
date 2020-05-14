@@ -222,9 +222,9 @@ void directedTests()
 void project_4()
 {
     // zadanie 1
-    AdjacencyList adjacencyList = Graph::createRandomDigraph(10, 0.5);
-    adjacencyList.print(std::cout);
-    std::cout << "\n\n";
+    // AdjacencyList adjacencyList = Graph::createRandomDigraph(10, 0.5);
+    // adjacencyList.print(std::cout);
+    // std::cout << "\n\n";
 
     // zadanie 2
     AdjacencyList adjacencyList1 = AdjacencyList::loadFromFile("input/p4/adjList_ad1.txt");
@@ -232,14 +232,14 @@ void project_4()
     
     AdjacencyList adjacencyList2 = AdjacencyList::loadFromFile("input/p4/adjList_ad2.txt");
     Graph::kosarajuAlgorithm(adjacencyList2);
-    std::ofstream file("output.dat");
-    Graph *graph;
-    graph = &adjacencyList2;
-    graph->printToFile(file);
+
+    AdjacencyList adjacencyList3 = AdjacencyList::loadFromFile("input/p4/adjList_ad3.txt");
+    adjacencyList3.addVertex();
+    Graph::kosarajuAlgorithm(adjacencyList3);
 
     // std::cout << "Zadanie 2: losowy graf\n\n";
-    // AdjacencyList randomAdjacencyList = Graph::createRandomDigraph(7);
-    // Graph::kosarajuAlgorithm(randomAdjacencyList);
+    AdjacencyList randomAdjacencyList = Graph::createRandomDigraph(7);
+    Graph::kosarajuAlgorithm(randomAdjacencyList);
     // std::ofstream file("output.dat");
     // Graph *graph;
     // graph = &randomAdjacencyList;
