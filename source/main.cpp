@@ -254,7 +254,7 @@ void project_4()
     bool isCoherent = false;
     while (true)
     {
-        coherentGraph = Graph::createRandomDigraph(5, 0.3, -5, 10);
+        coherentGraph = Graph::createRandomDigraph(5, 0.3, -1, 10);
         Graph::kosarajuAlgorithm(coherentGraph, false, &isCoherent);
         if (isCoherent)
             break;
@@ -266,6 +266,15 @@ void project_4()
     {
         std::cout << "W grafie jest cykl ujemny" << std::endl;
     }
+
+    //zad4
+    std::cout << "\nZadanie 4: Algorytm Johnsona\n\n";
+
+    Graph *gr = &coherentGraph;
+    Graph::johnsonAlgorithm(*gr, 1);
+
+
+
 }
 
 int main()

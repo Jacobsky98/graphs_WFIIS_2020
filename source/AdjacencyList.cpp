@@ -226,3 +226,12 @@ void AdjacencyList::translate()
     }
     list = tmp.list;
 }
+
+void AdjacencyList::removeVertex(int vertex){
+    for (size_t i = 0; i < list.size(); i++)
+    {
+        removeEdge(vertex,i);
+    }
+    
+    list.pop_back();
+}

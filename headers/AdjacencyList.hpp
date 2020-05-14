@@ -35,6 +35,7 @@ public:
     virtual int getVertexAmount() const override;
     std::vector<std::list<Edge>> getList() const;
     virtual bool isDirectedGraph() const override;
+    void removeVertex(int vertex);
 
 	void translate();
 
