@@ -6,7 +6,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-
 #include <queue>
 
 void project_1()
@@ -272,9 +271,12 @@ void project_4()
 
     Graph *gr = &coherentGraph;
     Graph::johnsonAlgorithm(*gr, 1);
+}
 
-
-
+void project_5()
+{
+    FlowNetwork flowNet(2);
+    flowNet.print();
 }
 
 int main()
@@ -289,7 +291,7 @@ int main()
     // project_2();
     // project_3();
     // directedTests();
-    project_4();
-
+    // project_4();
+    project_5();
     return 0;
 }

@@ -6,5 +6,6 @@
 #include "headers/AdjacencyList.hpp"
 #include "headers/AdjacencyMatrix.hpp"
 #include "headers/IncidenceMatrix.hpp"
+#include "headers/FlowNetwork.hpp"
 
 #endif
