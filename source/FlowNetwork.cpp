@@ -172,6 +172,10 @@ std::ostream& FlowNetwork::printToFile(std::ostream& o)
 	
 	auto list = _network.getList();
 	bool nodeWrited[list.size()];
+	for(unsigned int nod = 0; nod < list.size(); nod++)
+	{
+		nodeWrited[nod] = false;
+	}
 	for(unsigned int layer = 0; layer < _numberOfNodesInLayer.size(); layer++)
 	{
 		o << "layer:" << layer << "_" << _numberOfNodesInLayer[layer] <<"\n";//, nodes: " << _numberOfNodesInLayer[layer] << std::endl;
