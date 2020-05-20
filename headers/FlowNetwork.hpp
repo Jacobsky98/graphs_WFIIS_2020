@@ -11,7 +11,7 @@ public:
 	int indexOf(int layerNum, int nodeNum);
 	void addEdgeBetween(int layerNumber1, int nodeInLayer1, int layerNumber2, int nodeInLayer2);
 	void print();
-	std::ostream& printToFile(std::ostream& o) const;
+	std::ostream& printToFile(std::ostream& o) ;
 	FlowNetwork fordFulkersonAlgorithm() const;
 
 private:

@@ -161,7 +161,7 @@ std::list<Edge> augmentingPath(AdjacencyList residualNetwork, int s = 0)
 	return path;
 }
 
-std::ostream& FlowNetwork::printToFile(std::ostream& o) const
+std::ostream& FlowNetwork::printToFile(std::ostream& o) 
 {
 	int maxNodesInLayer = 0;
 	for(int i : _numberOfNodesInLayer)
