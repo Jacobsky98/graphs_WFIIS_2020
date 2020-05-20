@@ -4,7 +4,8 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
-
+#include <cstdlib>
+#include <ctime>
 #include <queue>
 
 void project_1()
@@ -48,17 +49,17 @@ void project_2()
 {
     // zadanie 1
 
-    std::vector<int> A1 = {3,2,1,0}; // nie
+    std::vector<int> A1 = {3, 2, 1, 0}; // nie
     AdjacencyList::constuctGraphFromDegreeSequence(A1);
-    std::vector<int> A2 = {3,3,3,3}; // tak
+    std::vector<int> A2 = {3, 3, 3, 3}; // tak
     AdjacencyList::constuctGraphFromDegreeSequence(A2);
-    std::vector<int> A3 = {4,4,3,1,2}; // nie
+    std::vector<int> A3 = {4, 4, 3, 1, 2}; // nie
     AdjacencyList::constuctGraphFromDegreeSequence(A3);
-    std::vector<int> A4 = {4,2,2,3,2,1,4,2,2,2,2}; // tak
+    std::vector<int> A4 = {4, 2, 2, 3, 2, 1, 4, 2, 2, 2, 2}; // tak
     AdjacencyList adjacencyList = Graph::constuctGraphFromDegreeSequence(A4);
     std::ofstream file("output.dat");
-    Graph *graph = & adjacencyList;
-    graph -> printToFile(file);
+    Graph *graph = &adjacencyList;
+    graph->printToFile(file);
 
     // zadanie 2
 
@@ -211,12 +212,12 @@ void directedTests()
     testIncidenceMatrix.print(std::cout);
     std::cout << "\n\n";
 
-    std::cout<< adjacencyList.getVertexAmount() << " " << testAdjacencyMatrix.getVertexAmount() << " " << testIncidenceMatrix.getVertexAmount() << std::endl;
-    std::cout<< adjacencyList.doesEdgeExists(0, 1) << " " << testAdjacencyMatrix.doesEdgeExists(0, 1) << " " << testIncidenceMatrix.doesEdgeExists(0, 1) << std::endl;
-    std::cout<< adjacencyList.doesEdgeExists(3, 2) << " " << testAdjacencyMatrix.doesEdgeExists(3, 2) << " " << testIncidenceMatrix.doesEdgeExists(3, 2) << std::endl;
-    std::cout<< adjacencyList.isVertexIsolated(4) << " " << testAdjacencyMatrix.isVertexIsolated(4) << " " << testIncidenceMatrix.isVertexIsolated(4) << std::endl;
-    std::cout<< adjacencyList.dimOfVertex(2) << " " << testAdjacencyMatrix.dimOfVertex(2) << " " << testIncidenceMatrix.dimOfVertex(2) << std::endl;
-    std::cout<< adjacencyList.isDirectedGraph() << " " << testAdjacencyMatrix.isDirectedGraph() << " " << testIncidenceMatrix.isDirectedGraph() << std::endl;
+    std::cout << adjacencyList.getVertexAmount() << " " << testAdjacencyMatrix.getVertexAmount() << " " << testIncidenceMatrix.getVertexAmount() << std::endl;
+    std::cout << adjacencyList.doesEdgeExists(0, 1) << " " << testAdjacencyMatrix.doesEdgeExists(0, 1) << " " << testIncidenceMatrix.doesEdgeExists(0, 1) << std::endl;
+    std::cout << adjacencyList.doesEdgeExists(3, 2) << " " << testAdjacencyMatrix.doesEdgeExists(3, 2) << " " << testIncidenceMatrix.doesEdgeExists(3, 2) << std::endl;
+    std::cout << adjacencyList.isVertexIsolated(4) << " " << testAdjacencyMatrix.isVertexIsolated(4) << " " << testIncidenceMatrix.isVertexIsolated(4) << std::endl;
+    std::cout << adjacencyList.dimOfVertex(2) << " " << testAdjacencyMatrix.dimOfVertex(2) << " " << testIncidenceMatrix.dimOfVertex(2) << std::endl;
+    std::cout << adjacencyList.isDirectedGraph() << " " << testAdjacencyMatrix.isDirectedGraph() << " " << testIncidenceMatrix.isDirectedGraph() << std::endl;
 }
 
 void project_4()
@@ -229,7 +230,7 @@ void project_4()
     // zadanie 2
     AdjacencyList adjacencyList1 = AdjacencyList::loadFromFile("input/p4/adjList_ad1.txt");
     Graph::kosarajuAlgorithm(adjacencyList1);
-    
+
     AdjacencyList adjacencyList2 = AdjacencyList::loadFromFile("input/p4/adjList_ad2.txt");
     Graph::kosarajuAlgorithm(adjacencyList2);
 
@@ -240,15 +241,50 @@ void project_4()
     // std::cout << "Zadanie 2: losowy graf\n\n";
     AdjacencyList randomAdjacencyList = Graph::createRandomDigraph(7);
     Graph::kosarajuAlgorithm(randomAdjacencyList);
-    // std::ofstream file("output.dat");
-    // Graph *graph;
-    // graph = &randomAdjacencyList;
-    // graph->printToFile(file);
+    std::ofstream file("output.dat");
+    Graph *graph;
+    graph = &randomAdjacencyList;
+    graph->printToFile(file);
+
+    // zadanie 3
+    std::cout << "\nZadanie 3: Bellman-Ford Algorytm\n\n";
+    std::vector<int> result;
+    AdjacencyList coherentGraph;
+    bool isCoherent = false;
+    while (true)
+    {
+        coherentGraph = Graph::createRandomDigraph(5, 0.3, -5, 10);
+        Graph::kosarajuAlgorithm(coherentGraph, false, &isCoherent);
+        if (isCoherent)
+            break;
+    }
+    Graph::kosarajuAlgorithm(coherentGraph);
+
+    std::cout << std::endl;
+    if (!Graph::bellmanFordAlgorithm(coherentGraph, 0, result, true))
+    {
+        std::cout << "W grafie jest cykl ujemny" << std::endl;
+    }
+
+    //zad4
+    std::cout << "\nZadanie 4: Algorytm Johnsona\n\n";
+
+    Graph *gr = &coherentGraph;
+    Graph::johnsonAlgorithm(*gr, 1);
 }
 
+void project_5()
+{
+    FlowNetwork flowNet(2);
+    flowNet.print();
+
+    std::ofstream file("output_python.txt");
+    flowNet.printToFile(file);
+}
 
 int main()
 {
+    srand(time(NULL));
     // AdjacencyMatrix adjMat = {  0, 1, 0, 1, 0,
     //                             1, 0, 1, 1, 0,
     //                             0, 1, 0, 1, 0,
@@ -258,7 +294,7 @@ int main()
     // project_2();
     // project_3();
     // directedTests();
-    project_4();
-    
+    // project_4();
+    project_5();
     return 0;
 }

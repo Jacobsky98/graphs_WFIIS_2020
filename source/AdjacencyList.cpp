@@ -214,7 +214,24 @@ bool AdjacencyList::isDirectedGraph() const
 
 void AdjacencyList::translate()
 {
+    AdjacencyList tmp;
+
     for(unsigned int i = 0; i < list.size(); i++)
+        tmp.addVertex();
+
+    for(unsigned int i = 0; i < list.size(); i++)
+    {
         for(Edge& edge : list[i])
-            edge.translate();
+            tmp.addDirectedEdge(edge.destVertex, edge.srcVertex, edge.weight);
+    }
+    list = tmp.list;
+}
+
+void AdjacencyList::removeVertex(int vertex){
+    for (size_t i = 0; i < list.size(); i++)
+    {
+        removeEdge(vertex,i);
+    }
+    
+    list.pop_back();
 }
