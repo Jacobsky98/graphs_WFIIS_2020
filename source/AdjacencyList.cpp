@@ -246,6 +246,14 @@ void AdjacencyList::translate()
 {
     AdjacencyList tmp;
 
+
+    for(unsigned int i = 0; i < list.size(); i++)
+        tmp.addVertex();
+
+    for(unsigned int i = 0; i < list.size(); i++)
+    {
+        for(Edge& edge : list[i])
+
     for (unsigned int i = 0; i < list.size(); i++)
         tmp.addVertex();
 
@@ -257,12 +265,21 @@ void AdjacencyList::translate()
     list = tmp.list;
 }
 
+
+void AdjacencyList::removeVertex(int vertex){
+    for (size_t i = 0; i < list.size(); i++)
+    {
+        removeEdge(vertex,i);
+    }
+    
+
 void AdjacencyList::removeVertex(int vertex)
 {
     for (size_t i = 0; i < list.size(); i++)
     {
         removeEdge(vertex, i);
     }
+
 
     list.pop_back();
 }

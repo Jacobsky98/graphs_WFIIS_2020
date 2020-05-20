@@ -1,0 +1,17 @@
+maxNodesLayer:2
+layers:4
+layer:0_1
+0:1
+0:2
+0:3
+0:4
+layer:1_2
+1:4
+2:2
+2:3
+2:5
+layer:2_2
+3:5
+4:5
+layer:3_1
+5:

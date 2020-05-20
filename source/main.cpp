@@ -278,9 +278,14 @@ void project_5()
     FlowNetwork flowNet(2);
     flowNet.print();
 
+
+    std::ofstream file("output_python.txt");
+    flowNet.printToFile(file);
+
     std::cout << std::endl;
     FlowNetwork maxFlow = flowNet.fordFulkersonAlgorithm();
     maxFlow.print();
+
 }
 
 int main()

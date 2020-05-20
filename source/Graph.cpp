@@ -913,4 +913,5 @@ void Graph::add_s(Graph &graph)
     {
         graph.addDirectedEdge(graph.getVertexAmount() - 1,vertex, 0);
     }
+
 }

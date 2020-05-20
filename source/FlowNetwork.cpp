@@ -1,3 +1,4 @@
+
 #include "headers/FlowNetwork.hpp"
 #include <numeric>
 #include <time.h>
@@ -160,6 +161,41 @@ std::list<Edge> augmentingPath(AdjacencyList residualNetwork, int s = 0)
 	return path;
 }
 
+std::ostream& FlowNetwork::printToFile(std::ostream& o) const
+{
+	int maxNodesInLayer = 0;
+	for(int i : _numberOfNodesInLayer)
+		if(i > maxNodesInLayer)
+			maxNodesInLayer = i;
+	o << "maxNodesLayer:" << maxNodesInLayer << "\n";
+	o << "layers:" << _numberOfNodesInLayer.size() << "\n";
+	
+	auto list = _network.getList();
+	bool nodeWrited[list.size()];
+	for(unsigned int layer = 0; layer < _numberOfNodesInLayer.size(); layer++)
+	{
+		o << "layer:" << layer << "_" << _numberOfNodesInLayer[layer] <<"\n";//, nodes: " << _numberOfNodesInLayer[layer] << std::endl;
+		for(int nodeNum = 0; nodeNum < _numberOfNodesInLayer[layer]; nodeNum++)
+		{
+			auto edge = list[indexOf(layer, nodeNum)];
+			for(Edge e : edge)
+			{
+				nodeWrited[e.srcVertex] = true;
+				o << e.srcVertex << ":" << e.destVertex << "\n";
+			}
+		}
+	}
+
+	for(unsigned int i = 0; i < list.size(); i++)
+	{
+		if(nodeWrited[i] == false)
+			o << i << ":\n";
+	}
+
+
+	return o;
+}
+
 FlowNetwork FlowNetwork::fordFulkersonAlgorithm() const
 {
 	FlowNetwork maxFlow = *this;
@@ -216,4 +252,5 @@ FlowNetwork FlowNetwork::fordFulkersonAlgorithm() const
 	}
 
 	return maxFlow;
+
 }

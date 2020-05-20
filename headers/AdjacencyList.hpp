@@ -39,7 +39,9 @@ public:
     virtual bool isDirectedGraph() const override;
     void removeVertex(int vertex);
 
-    void translate();
+
+	  void translate();
+
 
 private:
     std::vector<std::list<Edge>> list;
