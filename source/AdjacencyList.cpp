@@ -62,6 +62,36 @@ Graph &AdjacencyList::addDirectedEdge(int firstVertex, int secondVertex, int wei
     return *this;
 }
 
+Graph &AdjacencyList::setDirectedEdgeWeight(int firstVertex, int secondVertex, int weight)
+{
+    if (doesEdgeExists(firstVertex, secondVertex))
+    {
+        for (auto &edge : list[firstVertex])
+        {
+            if (edge.destVertex == secondVertex)
+            {
+                edge.weight = weight;
+            }
+        }
+    }
+    return *this;
+}
+
+Edge AdjacencyList::getEdge(int firstVertex, int secondVertex) const
+{
+    if (doesEdgeExists(firstVertex, secondVertex))
+    {
+        for (auto &edge : list[firstVertex])
+        {
+            if (edge.destVertex == secondVertex)
+            {
+                return edge;
+            }
+        }
+    }
+    return Edge(0, 0);
+}
+
 Graph &AdjacencyList::addEdge(const Edge &edge)
 {
     return addEdge(edge.srcVertex, edge.destVertex, edge.weight);
@@ -166,14 +196,14 @@ bool AdjacencyList::isVertexIsolated(int vertex) const
 
 int AdjacencyList::dimOfVertex(int vertex) const
 {
-    if(isDirectedGraph())
+    if (isDirectedGraph())
     {
         int result = 0;
         for (int i = 0; i < (int)list.size(); i++)
         {
             for (Edge edge : list[i])
             {
-                if(i == vertex || edge.destVertex == vertex)
+                if (i == vertex || edge.destVertex == vertex)
                     result++;
             }
         }
@@ -205,7 +235,7 @@ bool AdjacencyList::isDirectedGraph() const
     {
         for (Edge edge : list[i])
         {
-            if(doesEdgeExists(i, edge.destVertex) && !doesEdgeExists(edge.destVertex, i))
+            if (doesEdgeExists(i, edge.destVertex) && !doesEdgeExists(edge.destVertex, i))
                 return true;
         }
     }
@@ -216,22 +246,23 @@ void AdjacencyList::translate()
 {
     AdjacencyList tmp;
 
-    for(unsigned int i = 0; i < list.size(); i++)
+    for (unsigned int i = 0; i < list.size(); i++)
         tmp.addVertex();
 
-    for(unsigned int i = 0; i < list.size(); i++)
+    for (unsigned int i = 0; i < list.size(); i++)
     {
-        for(Edge& edge : list[i])
+        for (Edge &edge : list[i])
             tmp.addDirectedEdge(edge.destVertex, edge.srcVertex, edge.weight);
     }
     list = tmp.list;
 }
 
-void AdjacencyList::removeVertex(int vertex){
+void AdjacencyList::removeVertex(int vertex)
+{
     for (size_t i = 0; i < list.size(); i++)
     {
-        removeEdge(vertex,i);
+        removeEdge(vertex, i);
     }
-    
+
     list.pop_back();
 }

@@ -11,6 +11,8 @@ public:
 	void addEdgeBetween(int layerNumber1, int nodeInLayer1, int layerNumber2, int nodeInLayer2);
 	void print();
 
+	FlowNetwork fordFulkersonAlgorithm() const;
+
 private:
 	int _layersAmount;
 	std::vector<int> _numberOfNodesInLayer;
