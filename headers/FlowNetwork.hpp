@@ -1,3 +1,4 @@
+
 #pragma once
 #include "headers/AdjacencyList.hpp"
 
@@ -7,10 +8,11 @@ public:
 	FlowNetwork(int layersAmount);
 	void addLayer();
 	void addNodeToLastLayer(int amount = 1);
-	int indexOf(int layerNum, int nodeNum) const;
+	int indexOf(int layerNum, int nodeNum);
 	void addEdgeBetween(int layerNumber1, int nodeInLayer1, int layerNumber2, int nodeInLayer2);
 	void print();
 	std::ostream& printToFile(std::ostream& o) const;
+	FlowNetwork fordFulkersonAlgorithm() const;
 
 private:
 	int _layersAmount;
@@ -18,4 +20,5 @@ private:
 	AdjacencyList _network;
 	void _addBeginningEdges();
 	void _addEvenMoreEdges();
+
 };

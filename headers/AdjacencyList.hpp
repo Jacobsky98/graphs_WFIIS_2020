@@ -18,6 +18,7 @@ public:
 
     virtual Graph &addEdge(int firstVertex, int secondVertex, int weight = 1) override;
     virtual Graph &addDirectedEdge(int firstVertex, int secondVertex, int weight = 1) override;
+    Graph &setDirectedEdgeWeight(int firstVertex, int secondVertex, int weight);
     Graph &addEdge(const Edge &edge);
     virtual Graph &removeEdge(int firstVertex, int secondVertex) override;
     virtual Graph &removeDirectedEdge(int firstVertex, int secondVertex) override;
@@ -34,10 +35,13 @@ public:
     virtual std::vector<int> getVectorOfVerticesConnectedTo(int vertex) const override;
     virtual int getVertexAmount() const override;
     std::vector<std::list<Edge>> getList() const;
+    Edge getEdge(int firstVertex, int secondVertex) const;
     virtual bool isDirectedGraph() const override;
     void removeVertex(int vertex);
 
-	void translate();
+
+	  void translate();
+
 
 private:
     std::vector<std::list<Edge>> list;
