@@ -105,7 +105,7 @@ void FlowNetwork::_addEvenMoreEdges()
 	{
 		int sourceNode = rand() % (_network.getVertexAmount() - 1);
 		int destNode = rand() % (_network.getVertexAmount() - 1) + 1;
-		if (!(_network.doesEdgeExists(sourceNode, destNode) || _network.doesEdgeExists(destNode, sourceNode)))
+		if (!(_network.doesEdgeExists(sourceNode, destNode) || _network.doesEdgeExists(destNode, sourceNode) || sourceNode == destNode))
 		{
 			_network.addDirectedEdge(sourceNode, destNode, rand() % 10 + 1);
 			toAdd--;
