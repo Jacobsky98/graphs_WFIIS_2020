@@ -9,4 +9,4 @@ set style line 1 \
     linetype 1 linewidth 2 \
     pointtype 7 pointsize 1.5
 
-plot 'output.dat' with linespoints linestyle 1 notitle
+plot 'zad62.txt' with linespoints linestyle 1 notitle

@@ -8,6 +8,12 @@
 #include <ctime>
 #include <queue>
 
+#include <algorithm>
+#include <array>
+#include <random> // std::default_random_engine
+#include <math.h>
+#include <iomanip> // std::setprecision
+#include <fstream>
 void project_1()
 {
     std::ofstream file("output.dat");
@@ -278,19 +284,327 @@ void project_5()
     FlowNetwork flowNet(2);
     flowNet.print();
 
-
     std::ofstream file("output_python.txt");
     flowNet.printToFile(file);
 
     std::cout << std::endl;
     FlowNetwork maxFlow = flowNet.fordFulkersonAlgorithm();
     maxFlow.print();
+}
 
+// constexpr int N = 2;
+// constexpr int iter = 1000011;
+// constexpr int iter2 = 111;
+// constexpr float teleport = 0.15;
+
+// void project_6()
+// {
+//     std::string names[8] = {"A", "B", "C", "D", "E", "F", "G"};
+//     int PageRank1[N] = {};
+//     //  A, B, C, D, E, F
+//     float repr1[N][N] = {
+//         {0, 1},
+//         {1, 0}
+//     };
+
+constexpr int N = 6;
+constexpr int iter = 1000011;
+constexpr int iter2 = 20;
+constexpr float teleport = 0.15;
+
+void project_6()
+{
+    std::cout << std::setprecision(2) << std::fixed;
+    {
+
+        std::string names[8] = {"A", "B", "C", "D", "E", "F", "G"};
+        int PageRank1[N] = {};
+        //  A, B, C, D, E, F
+        float repr1[N][N] = {
+            {0, 1, 0, 1, 1, 0},  //A
+            {0, 0, 1, 0, 1, 0},  //B
+            {0, 1, 0, 1, 0, 1},  //C
+            {0, 1, 0, 0, 0, 0},  //D
+            {0, 1, 0, 1, 0, 1},  //E
+            {0, 1, 0, 0, 0, 0}}; //F
+        //itera
+        int poz = rand() % N;
+        for (size_t i = 0; i < iter; i++)
+        {
+            PageRank1[poz]++;
+
+            //testing dead end
+            bool empty = 1;
+            for (size_t j = 0; j < N; j++)
+            {
+                if (repr1[poz][j] == 1)
+                {
+                    empty = 0;
+                }
+            }
+            if (empty)
+            {
+                std::cout << poz;
+
+                poz = rand() % N;
+                continue;
+            }
+            //
+            float r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+            if (r < teleport)
+            {
+                poz = rand() % N;
+            }
+            else
+            {
+                int gues = rand() % N;
+                while (repr1[poz][gues] == 0)
+                {
+                    gues = rand() % N;
+                    // std::cout << "Vertex " << gues << " Page rank: " <<repr1[poz][gues] << "\n";
+                }
+                poz = gues;
+            }
+        }
+
+        struct Rank
+        {
+
+            std::string name;
+            float v;
+            Rank(std::string name, float v) : name(name), v(v){};
+            bool operator>(Rank a) { return v > a.v; }
+            bool operator<(Rank a) { return v < a.v; }
+        };
+        // std::priority_queue<Rank, std::vector<Rank>, std::greater<>> sorted_ranking;
+        std::priority_queue<Rank, std::vector<Rank>, std::less<>> sorted_ranking;
+        std::priority_queue<Rank, std::vector<Rank>, std::less<>> sorted_ranking2;
+
+        for (size_t i = 0; i < N; i++)
+        {
+            //   std::cout << "Vertex " << names[i] << " Page rank: " << (float)PageRank1[i] / (float)iter << "\n";
+            sorted_ranking.push(Rank(names[i], (float)PageRank1[i] / (float)iter));
+        }
+        for (size_t i = 0; i < N; i++)
+        {
+            std::cout << "Vertex " << sorted_ranking.top().name << " Page rank: " << sorted_ranking.top().v << "\n";
+            sorted_ranking.pop();
+        }
+
+        //metoda 2
+        float obs[N] = {};
+        float obs_hist[10][N] = {};
+
+        for (auto &i : obs)
+        {
+            i = 1.0 / (float)N;
+        }
+
+        float P[N][N] = {};
+        int d[N] = {};
+        for (size_t i = 0; i < N; i++)
+        {
+            for (size_t j = 0; j < N; j++)
+            {
+                d[i] += repr1[i][j];
+            }
+        }
+        for (size_t i = 0; i < N; i++)
+        {
+            for (size_t j = 0; j < N; j++)
+            {
+                P[i][j] = ((1 - teleport) * (repr1[i][j] / (float)d[i])) + (teleport / (float)N);
+            }
+        }
+
+        float sum[N] = {};
+        for (size_t t = 0; t < iter2; t++)
+        {
+            for (size_t i = 0; i < N; i++)
+            {
+                sum[i] = 0;
+                for (size_t j = 0; j < N; j++)
+                {
+                    sum[i] += obs[j] * P[j][i];
+                }
+            }
+            for (size_t i = 0; i < N; i++)
+            {
+                obs[i] = sum[i];
+                obs_hist[t % 10][i] = sum[i];
+            }
+        }
+        std::cout << "\n\nAlgorytm2:\n";
+
+        float error = 0;
+        if (iter2 > 20)
+        {
+            for (size_t t = 0; t < 10; t++)
+            {
+                for (size_t i = 0; i < N; i++)
+                {
+                    error += (obs_hist[t][i] - obs[i]) * (obs_hist[t][i] - obs[i]);
+                }
+            }
+        }
+        if (error > 0.8)
+        {
+            std::cout << "\nWynik nie jest staly algorytm korzysta z sredniej z ostatnich 10 iteracji:";
+
+            for (size_t i = 0; i < N; i++)
+            {
+                obs[i] = 0;
+            }
+            for (size_t t = 0; t < 10; t++)
+            {
+                for (size_t i = 0; i < N; i++)
+                {
+                    obs[i] += obs_hist[t][i] / 10;
+                }
+            }
+        }
+
+        for (size_t i = 0; i < N; i++)
+        {
+            //   std::cout << "Vertex " << names[i] << " Page rank: " << (float)PageRank1[i] / (float)iter << "\n";
+            sorted_ranking2.push(Rank(names[i], (float)obs[i]));
+        }
+        for (size_t i = 0; i < N; i++)
+        {
+            std::cout << "Vertex " << sorted_ranking2.top().name << " Page rank: " << sorted_ranking2.top().v << "\n";
+            sorted_ranking2.pop();
+        }
+    }
+    //ZAD2
+    //
+    //
+    //
+    //
+
+    {
+
+        constexpr float kwadrat_x = 2, kwadrat_y = 2; //ofsety 0
+        constexpr int il_punkt = 20, iter3 =122;
+        float tab[2][il_punkt] = {};
+        std::array<int, il_punkt> P;    //indeksy punktow
+        std::array<int, il_punkt> Pnew; //indeksy punktow
+
+        for (size_t i = 0; i < il_punkt; i++)
+        {
+            tab[0][i] = (float)rand() / (float)RAND_MAX * kwadrat_x;
+            tab[1][i] = (float)rand() / (float)RAND_MAX * kwadrat_y;
+            P[i] = i;
+            std::cout << "v: " << i << " ";
+            std::cout << "x: " << tab[0][i] << " ";
+            std::cout << "y: " << tab[1][i] << "\n";
+        }
+
+        auto fd = [tab](std::array<int, il_punkt> P, bool print = 0) -> float {
+            float distance = 0;
+            int i = 0;
+
+            do
+            {
+                int a = i;
+                int b = P[i];
+                distance += sqrt((tab[0][a] - tab[0][b]) * (tab[0][a] - tab[0][b]) + (tab[1][a] - tab[1][b]) * (tab[1][a] - tab[1][b]));
+                if (print)
+                {
+                    std::cout << "Idę z " << a << " do " << b << " całkowidy przebyty dystans to " << distance << "\n";
+                }
+
+                i = P[i];
+            } while (i != 0);
+
+            if (print)
+            {
+                std::ofstream myfile;
+                myfile.open("zad62.txt");
+                do
+                {
+                   
+
+                    myfile << tab[0][i] << " " << tab[1][i] << "\n";
+
+                    i = P[i];
+                } while (i != 0);
+
+                myfile.close();
+            }
+            return distance;
+        };
+        for (size_t i = 0; i < il_punkt; i++)
+        {
+            P[i] = (i + 1) % il_punkt;
+        }
+
+        for (size_t i = 100; i >= 1; i--)
+        {
+            float T = 0.001 * i * i;
+            for (size_t it = 0; it < iter3; it++)
+            {
+                int a = rand() % il_punkt;
+                int b = P[a];
+                int c = rand() % il_punkt;
+                int d = P[c];
+
+                while (a == c || a == d || b == c || b == d)
+                {
+                    c = rand() % il_punkt;
+                    d = P[c];
+                    // std::cout << "ok\n";
+                }
+                std::copy(std::begin(P), std::end(P), std::begin(Pnew));
+
+                //!!
+                Pnew[a] = c;
+                Pnew[b] = d;
+                int temp = b;
+                int next = P[temp];
+                int nnext = P[next];
+
+                while (temp != c)
+                {
+                    nnext = Pnew[next];
+                    Pnew[next] = temp;
+                    temp = next;
+                    next = nnext;
+                    //      std::cout<< temp<<" "<<c<<"\n";
+                }
+
+                //   std::cout << a << " " << b << " " << c << " " << d << " \n";
+
+                // for (size_t i = 0; i < il_punkt; i++)
+                // {
+                //     std::cout<<"\n"<<i<<" "<<P[i]<<"\n";
+                // }
+
+                if (fd(Pnew) < fd(P))
+                {
+                    std::copy(std::begin(Pnew), std::end(Pnew), std::begin(P));
+                }
+                else
+                {
+                    float r = (float)rand() / (float)RAND_MAX;
+                    if (r < exp(-(fd(Pnew) - fd(P)) / T))
+                    {
+                        std::copy(std::begin(Pnew), std::end(Pnew), std::begin(P));
+                    }
+
+             //       std::cout<<exp(-(fd(Pnew)- fd(P)) / T)<<"\n";
+                }
+            }
+        }
+
+        fd(P, 1);
+    }
 }
 
 int main()
 {
-    srand(time(NULL));
+    // srand(time(NULL));
+    srand(122);
     // AdjacencyMatrix adjMat = {  0, 1, 0, 1, 0,
     //                             1, 0, 1, 1, 0,
     //                             0, 1, 0, 1, 0,
@@ -301,6 +615,8 @@ int main()
     // project_3();
     // directedTests();
     // project_4();
-    project_5();
+    // project_5();
+    project_6();
+
     return 0;
 }
